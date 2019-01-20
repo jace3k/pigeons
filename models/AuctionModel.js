@@ -1,6 +1,4 @@
-import UserModel from "./UserModel";
-
-export default (sequelize, type) => {
+module.exports = (sequelize, type) => {
     return sequelize.define('auction', {
         id: {
             type: type.INTEGER,

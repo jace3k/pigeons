@@ -97,7 +97,7 @@ router.post('/login', (req, res) => {
 
                     } else {
                         errors.password = 'Złe hasło';
-                        res.json(errors);
+                        res.status(400).json(errors);
                     }
                 })
         })

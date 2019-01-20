@@ -1,6 +1,6 @@
-import Sequelize from 'sequelize';
-import UserModel from '../models/UserModel';
-import AuctionModel from '../models/AuctionModel';
+const Sequelize = require('sequelize');
+const UserModel =  require('../models/UserModel');
+const AuctionModel = require('../models/AuctionModel');
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     dialect: 'postgres',

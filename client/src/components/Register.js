@@ -18,12 +18,9 @@ import {registerUser} from "../actions/authActions";
 
 import {
     LOGIN_ELEMENT,
-    TITLE,
-    PRIMARY_COLOR,
     SECONDARY_COLOR
 } from "../constants";
 
-import axios from 'axios';
 import {withSnackbar} from "notistack";
 
 class Register extends Component {
@@ -80,7 +77,7 @@ class Register extends Component {
         }
         return (
             <div>
-                {registerSuccess || isAuthenticated && <Redirect to={"/"}/>}
+                {(registerSuccess || isAuthenticated) && <Redirect to={"/"}/>}
                 <Card className={"card"}>
                     <form noValidate autoComplete="off" onSubmit={this.onSubmit}>
                         <CardContent className={"card-content"}>

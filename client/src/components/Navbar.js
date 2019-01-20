@@ -45,7 +45,7 @@ class Navbar extends Component {
     render() {
         const {anchorEl, currentTab} = this.state;
         const isMenuOpen = Boolean(anchorEl);
-        const {isAuthenticated, user} = this.props.auth;
+        const {isAuthenticated} = this.props.auth;
         const renderMenu = (
             <Menu
                 anchorEl={anchorEl}

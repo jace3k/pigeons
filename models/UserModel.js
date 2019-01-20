@@ -1,4 +1,4 @@
-export default (sequelize, type) => {
+module.exports = (sequelize, type) => {
     return sequelize.define('user', {
         id: {
             type: type.INTEGER,
