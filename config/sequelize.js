@@ -3,7 +3,9 @@ import UserModel from '../models/UserModel';
 import AuctionModel from '../models/AuctionModel';
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    dialect: 'postgres'
+    dialect: 'postgres',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
 });
 
 const User = UserModel(sequelize, Sequelize);
