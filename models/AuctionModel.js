@@ -30,5 +30,15 @@ export default (sequelize, type) => {
             type: type.INTEGER,
             defaultValue: 0
         },
+    }, {
+        instanceMethods: {
+            toJSON: () => {
+                const values = Object.assign({}, this.get());
+                if (this.UserModel) {
+                    values.user = this.UserModel;
+                }
+                return values;
+            }
+        }
     })
 }

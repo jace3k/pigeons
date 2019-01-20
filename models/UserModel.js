@@ -20,5 +20,13 @@ export default (sequelize, type) => {
             type: type.DATE,
             defaultValue: type.NOW
         }
+    }, {
+        instanceMethods: {
+            toJSON: () => {
+                const values = Object.assign({}, this.get());
+                delete values.password;
+                return values
+            }
+        }
     })
 }

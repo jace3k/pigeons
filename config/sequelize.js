@@ -2,14 +2,14 @@ import Sequelize from 'sequelize';
 import UserModel from '../models/UserModel';
 import AuctionModel from '../models/AuctionModel';
 
-const sequelize = new Sequelize('pigeons', 'piggy', '1234qaz', {
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
     dialect: 'postgres'
 });
 
 const User = UserModel(sequelize, Sequelize);
 const Auction = AuctionModel(sequelize, Sequelize);
 
-// User.hasMany(Auction, {as: 'auctions'});
+// RELATIONS
 Auction.belongsTo(User, {
     foreignKey: {
         name: 'owner_id',
@@ -26,6 +26,6 @@ sequelize.sync()
     });
 
 module.exports = {
-  User,
-  Auction,
+    User,
+    Auction,
 };

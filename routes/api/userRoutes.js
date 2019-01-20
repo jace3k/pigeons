@@ -37,7 +37,7 @@ router.post('/register', (req, res) => {
 
     User.findOne({where: {email: req.body.email}}).then(user => {
         if (user) {
-            errors.email = 'Email already exists';
+            errors.email = 'Adres email jest już zajęty';
             return res.status(400).json(errors);
         } else {
             const newUser = {
@@ -50,7 +50,11 @@ router.post('/register', (req, res) => {
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
                     if (err) throw err;
                     newUser.password = hash;
-                    User.create(newUser).then(user => res.json({user}))
+                    User.create(newUser).then(user => res.json({
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                    }))
                         .catch(err => console.log(err));
                 })
             })
@@ -72,7 +76,7 @@ router.post('/login', (req, res) => {
         .then(user => {
             // check for user
             if (!user) {
-                errors.email = 'User not found';
+                errors.email = 'Nie znaleziono takiego użytkownika';
                 return res.status(404).json(errors);
             }
 
@@ -92,7 +96,7 @@ router.post('/login', (req, res) => {
                         });
 
                     } else {
-                        errors.password = 'Password incorrect';
+                        errors.password = 'Złe hasło';
                         res.json(errors);
                     }
                 })
