@@ -30,7 +30,6 @@ const theme = createMuiTheme({
 
 class App extends Component {
     render() {
-
         return (
             <Router>
                 <div className="App">
@@ -38,7 +37,7 @@ class App extends Component {
                         <Switch>
                             <Redirect exact from={"/"} to={"/app"}/>
                         </Switch>
-                        <Route path={"/app/"} component={Navbar}/>
+                        <Route path={"/app"} component={Navbar}/>
                         <main style={{flex: 1}}>
                             <Route exact path={"/app"} component={Main}/>
                             <Route exact path={"/app/add"} component={AddAuction}/>
