@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const path = require('path');
 const app = express();
-require('dotenv').config();
+// require('dotenv').config();
 
 const UserRoutes = require('./routes/api/userRoutes');
 const AuctionRoutes = require('./routes/api/auctionRoutes');
