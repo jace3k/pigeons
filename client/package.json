@@ -10,6 +10,7 @@
     "jwt-decode": "^2.2.0",
     "notistack": "^0.4.1",
     "react": "^16.7.0",
+    "react-device-detect": "^1.6.2",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",

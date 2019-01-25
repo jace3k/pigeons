@@ -1,45 +1,87 @@
-import React, {Component} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import CardActionArea from '@material-ui/core/CardActionArea';
 
 import img from '../img/background.jpg';
+import { Link } from 'react-router-dom';
 
-class ListCard extends Component {
-    render() {
-        return (
-                <Card style={{maxWidth: '345'}}>
-                    <CardActionArea>
-                        <CardMedia style={{height: 180}}
-                            // className={classes.media}
-                            image={img}
-                            title="Contemplative Reptile"
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                Lizard
-                            </Typography>
-                            <Typography component="p">
-                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                across all continents except Antarctica
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                        <Button size="small" color="primary">
-                            Share
-                        </Button>
-                        <Button size="small" color="primary">
-                            Learn More
-                        </Button>
-                    </CardActions>
-                </Card>
-        );
-    }
+const styles = theme => ({
+  card: {
+    display: 'flex',
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  content: {
+    flex: '1 0 auto',
+  },
+  cover: {
+    width: 200,
+    height: 140,
+    minWidth: 200,
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+  },
+  price: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+  }
+});
+
+function MediaControlCard(props) {
+  const { classes, auction, } = props;
+
+  return (
+    <Card>
+        <Link to={`/app/auction/${auction.id}`}  style={{textDecoration: 'none'}}>
+    <CardActionArea className={classes.card}>
+    <CardMedia
+        className={classes.cover}
+        image={img}
+        title="Live from space album cover"
+      />
+      <div className={classes.details}>
+        <CardContent className={classes.content}>
+          <Typography component="h5" variant="h5">
+            {auction.title}
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary">
+            {auction.subtitle}
+          </Typography>
+        </CardContent>
+        <div className={classes.controls}>
+         
+        </div>
+      </div>
+      <div style={{flexGrow: '1'}}/>
+      <div className={classes.price}>
+          <Typography variant="h5" color="textSecondary">
+            {auction.price.toFixed(2)}{' zł'}
+          </Typography>
+      </div>  
+      </CardActionArea>
+      </Link>
+    </Card>
+  );
 }
 
-export default ListCard;
+MediaControlCard.propTypes = {
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(MediaControlCard);
