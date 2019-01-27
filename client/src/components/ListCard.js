@@ -1,87 +1,110 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React, {Component} from 'react';
+import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import img from '../img/background.jpg';
-import { Link } from 'react-router-dom';
+import {SECONDARY_COLOR} from "../constants";
 
 const styles = theme => ({
   card: {
+    // border: `3px solid ${SECONDARY_COLOR}`
+  },
+  cardactionarea: {
     display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    height: '100%',
+    // border: '1px dashed red',
   },
-  details: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  content: {
-    flex: '1 0 auto',
-  },
-  cover: {
+  imagecontainer: {},
+  image: {
     width: 200,
     height: 140,
     minWidth: 200,
+    [theme.breakpoints.down('sm')]: {
+      width: 100,
+      minWidth: 100,
+      height: 220,
+    }
   },
-  controls: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
+  titlearea: {
+    flexBasis: '100%',
+    // border: '1px dashed black',
+    padding: theme.spacing.unit,
+    [theme.breakpoints.down('sm')]: {
+      // flexBasis: '100%',
+    },
   },
-  price: {
+  pricearea: {
+    flexBasis: '20em',
+    borderLeft: `3px solid ${SECONDARY_COLOR}`,
+    // border: '1px dashed black',
+    padding: theme.spacing.unit,
+    paddingTop: '2em',
+    [theme.breakpoints.down('sm')]: {
+
+      flexBasis: '0',
+      paddingTop: theme.spacing.unit,
+      borderLeft: '0',
+      borderTop: `3px solid ${SECONDARY_COLOR}`,
+    }
+  },
+
+  details: {
+    width: '100%',
+    // height: '100%',
     display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-  }
+    justifyItems: 'space-between',
+    flexDirection: 'row',
+    // border: '1px dashed black',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    }
+  },
+  typoprice: {}
 });
 
-function MediaControlCard(props) {
-  const { classes, auction, } = props;
+class MediaControlCard extends Component {
+  render() {
+    const {classes, auction,} = this.props;
 
-  return (
-    <Card>
-        <Link to={`/app/auction/${auction.id}`}  style={{textDecoration: 'none'}}>
-    <CardActionArea className={classes.card}>
-    <CardMedia
-        className={classes.cover}
-        image={img}
-        title="Live from space album cover"
-      />
-      <div className={classes.details}>
-        <CardContent className={classes.content}>
-          <Typography component="h5" variant="h5">
-            {auction.title}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            {auction.subtitle}
-          </Typography>
-        </CardContent>
-        <div className={classes.controls}>
-         
-        </div>
-      </div>
-      <div style={{flexGrow: '1'}}/>
-      <div className={classes.price}>
-          <Typography variant="h5" color="textSecondary">
-            {auction.price.toFixed(2)}{' zł'}
-          </Typography>
-      </div>  
-      </CardActionArea>
-      </Link>
-    </Card>
-  );
+    return (
+      <Card className={classes.card}>
+        <CardActionArea className={classes.cardactionarea}
+                        onClick={() => this.props.history.push(`/auction/${auction.id}`)}>
+          <div className={classes.imagecontainer}>
+            <CardMedia
+              className={classes.image}
+              image={img}
+              title="Live from space album cover"
+            />
+          </div>
+          <div className={classes.details}>
+            <div className={classes.titlearea}>
+              <Typography variant="h6">
+                {auction.title}
+              </Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                {auction.description}
+              </Typography>
+            </div>
+            <div className={classes.pricearea}>
+              <Typography variant="overline" noWrap>
+                Cena
+              </Typography>
+              <Typography variant="h6" className={classes.typoprice}>
+                {auction.price}{' zł'}
+              </Typography>
+            </div>
+          </div>
+        </CardActionArea>
+      </Card>
+    );
+  }
 }
 
-MediaControlCard.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(MediaControlCard);
+export default withStyles(styles, {withTheme: true})(MediaControlCard);

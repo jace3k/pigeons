@@ -5,12 +5,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
+const validateAuctionInput = require('../../validation/auction');
 
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const {errors, isValid} = validateAuctionInput(req.body);
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
     const endDate = Date.now() + 1000 * 60 * 60 * 24;
     const newAuction = {
+        title: req.body.title,
         price: req.body.price,
-        // endDate: req.body.endDate,          // endDate is ending date in ms.
         endDate: endDate,
         isActive: endDate - Date.now() > 0,
         description: req.body.description,
@@ -24,6 +30,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
                 return res.json({
                     id: auction.id,
                     viewsCount: auction.viewsCount,
+                    title: auction.title,
                     price: auction.price,
                     endDate: auction.endDate,
                     isActive: auction.isActive,
@@ -42,9 +49,14 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 });
 
 router.get('/', (req, res) => {
-    Auction.findAndCountAll({include: [{
+    Auction.findAndCountAll({
+        include: [{
             model: User, attributes: ['name']
-        }]})
+        }],
+        order: [
+          ['createdAt', 'DESC']
+        ]
+    })
         .then(auctions => {
             return res.json(auctions)
         })
@@ -52,13 +64,29 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     Auction.findById(req.params.id)
-        .then(auction => {
-            if (auction) {
-                return res.json(auction)
-            } else {
-                return res.json({auction: 'Nie znaleziono aukcji'})
-            }
-        })
+      .then(auction => {
+          if (auction) {
+              User.findById(auction.owner_id).then(user => {
+                  return res.json({
+                      id: auction.id,
+                      viewsCount: auction.viewsCount,
+                      title: auction.title,
+                      price: auction.price,
+                      endDate: auction.endDate,
+                      isActive: auction.isActive,
+                      description: auction.description,
+                      images: auction.images,
+                      owner: {
+                          id: user.id,
+                          name: user.name,
+                          email: user.email,
+                      },
+                  });
+              });
+          } else {
+              return res.status(400).json({auction: 'Nie znaleziono aukcji'})
+          }
+      });
 });
 
 
@@ -66,7 +94,6 @@ router.get('/deactivate/:id', (req, res) => {
     Auction.findById(req.params.id)
         .then(auction => {
             if (auction) {
-                console.log(auction.isActive);
                 if(!auction.isActive) {
                     return res.json({auction: 'Aukcja nieaktywna'});
                 } else {
@@ -77,7 +104,7 @@ router.get('/deactivate/:id', (req, res) => {
 
 
             } else {
-                return res.json({auction: 'Nie znaleziono aukcji'});
+                return res.status(400).json({auction: 'Nie znaleziono aukcji'});
             }
         })
 });

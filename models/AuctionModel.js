@@ -5,9 +5,13 @@ module.exports = (sequelize, type) => {
             primaryKey: true,
             autoIncrement: true,
         },
+        title: {
+            type: type.TEXT,
+            allowNull: false,
+        },
         price: {
             type: type.DECIMAL(10,2),
-            allowNull: false
+            allowNull: false,
         },
         endDate: {
             type: type.DATE,

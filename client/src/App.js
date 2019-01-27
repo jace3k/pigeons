@@ -6,7 +6,7 @@ import Main from './components/Main';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Footer from "./components/Footer";
 
-import {BrowserRouter as Router, Route, Redirect, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Route} from "react-router-dom";
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import primary from '@material-ui/core/colors/deepPurple';
@@ -34,29 +34,24 @@ class App extends Component {
             <Router>
                 <div className="App">
                     <MuiThemeProvider theme={theme}>
-                        <Switch>
-                            <Redirect exact from={"/"} to={"/app"}/>
-                        </Switch>
-                        <Route path={"/app"} component={Navbar}/>
+                        <Route path={"/"} component={Navbar}/>
                         <main style={{flex: 1}}>
-                            <Route exact path={"/app"} component={Main}/>
-                            <Route exact path={"/app/add"} component={AddAuction}/>
-                            <Route exact path={"/app/last"} component={LastAuctions}/>
-                            <Route exact path={"/app/archive"} component={Archive}/>
-                            <Route exact path={"/app/auction/:id"} component={Auction}/>
-
+                            <Route exact path={"/"} component={Main}/>
+                            <Route exact path={"/add"} component={AddAuction}/>
+                            <Route exact path={"/last"} component={LastAuctions}/>
+                            <Route exact path={"/archive"} component={Archive}/>
+                            <Route exact path={"/auction/:id"} component={Auction}/>
                             <Route exact path={"/register"} component={Register} />
                             <Route exact path={"/login"} component={Login}/>
                         </main>
                         <footer>
-                            <Route path={"/app"} component={Footer}/>
+                            <Route path={"/"} component={Footer}/>
                         </footer>
 
                         <CssBaseline/>
                     </MuiThemeProvider>
                 </div>
             </Router>
-
         );
     }
 }

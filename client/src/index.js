@@ -25,7 +25,7 @@ const app = (
     <Provider store={store}>
         <SnackbarProvider
             maxSnack={3}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         >
             <App/>
         </SnackbarProvider>

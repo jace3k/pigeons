@@ -16,6 +16,10 @@ module.exports = (sequelize, type) => {
             type: type.STRING,
             allowNull: false
         },
+        telephone: {
+            type: type.STRING,
+            allowNull: true,
+        },
         date: {
             type: type.DATE,
             defaultValue: type.NOW
@@ -29,4 +33,4 @@ module.exports = (sequelize, type) => {
             }
         }
     })
-}
+};

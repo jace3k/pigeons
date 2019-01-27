@@ -21,6 +21,24 @@ import {connect} from "react-redux";
 import {withSnackbar} from "notistack";
 import {Redirect} from "react-router-dom";
 
+import {withStyles} from '@material-ui/core/styles';
+
+const styles = theme => ({
+    container: {
+        width: '100%',
+        [theme.breakpoints.down('sm')]: {}
+    },
+    card: {
+        width: '25em',
+        margin: '5em auto',
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+            margin: 0,
+            marginBottom: '1em',
+        },
+    }
+});
+
 
 class Login extends Component {
     state = {
@@ -32,6 +50,10 @@ class Login extends Component {
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
+            errors: {
+                ...this.state.errors,
+                [name]: null
+            }
         });
     };
 
@@ -42,9 +64,6 @@ class Login extends Component {
             email: this.state.email,
             password: this.state.password
         };
-
-        // console.log(user);
-
         this.props.loginUser(user);
     };
 
@@ -57,6 +76,7 @@ class Login extends Component {
     render() {
         const {errors} = this.state;
         const { isAuthenticated } = this.props.auth;
+        const { classes } = this.props;
 
         if (isAuthenticated) {
             this.props.enqueueSnackbar('Zalogowano pomyślnie.', { variant: 'success' })
@@ -64,7 +84,7 @@ class Login extends Component {
         return (
             <div>
                 {isAuthenticated && <Redirect to={"/"}/>}
-                <Card className={"card"}>
+                <Card className={classes.card}>
                     <form noValidate autoComplete="off" onSubmit={this.onSubmit}>
                         <CardContent className={"card-content"}>
                             <Avatar
@@ -125,7 +145,7 @@ class Login extends Component {
                                 {'Zaloguj'}
                             </Button>
                             <ButtonLink
-                                to={"/app"}
+                                to={"/"}
                             >
                                 Wróć
                             </ButtonLink>
@@ -143,4 +163,4 @@ const mapStateToProps = state => ({
     errors: state.errors
 });
 
-export default connect(mapStateToProps, {loginUser})(withSnackbar(Login));
+export default connect(mapStateToProps, {loginUser})(withSnackbar(withStyles(styles)(Login)));
