@@ -7,23 +7,43 @@ module.exports = (sequelize, type) => {
         },
         name: {
             type: type.STRING,
+            allowNull: false,
+        },
+        firstName: {
+            type: type.STRING,
+            allowNull: false,
+        },
+        lastName: {
+            type: type.STRING,
+            allowNull: false,
         },
         email: {
             type: type.STRING,
-            allowNull: false
+            allowNull: false,
         },
         password: {
             type: type.STRING,
-            allowNull: false
+            allowNull: false,
         },
         telephone: {
             type: type.STRING,
-            allowNull: true,
+        },
+        address: {
+            type: type.STRING,
         },
         date: {
             type: type.DATE,
             defaultValue: type.NOW
+        },
+        likes: {
+            type: type.ARRAY(type.INTEGER),
+            defaultValue: [],
+        },
+        dislikes: {
+            type: type.ARRAY(type.INTEGER),
+            defaultValue: [],
         }
+
     }, {
         instanceMethods: {
             toJSON: () => {

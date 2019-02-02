@@ -18,6 +18,7 @@ import Button from "@material-ui/core/Button";
 
 import {createAuction} from "../actions/auctionActions";
 import {withSnackbar} from "notistack";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const styles = theme => ({
   card: {
@@ -71,7 +72,7 @@ class AddAuction extends Component {
     title: '',
     description: '',
     price: '',
-    endDate: 0,
+    endDate: 7,
     images: [],
     errors: {},
 
@@ -113,22 +114,18 @@ class AddAuction extends Component {
       if (nextProps.auctions.error) {
         this.setState({errors: nextProps.auctions.error})
       } else {
-        this.setState({current: nextProps.auctions.current});
+        this.props.enqueueSnackbar(
+          `Utworzono aukcję ${nextProps.auctions.current.title}`,
+          {variant: 'success'});
+        this.props.history.push(`/auction/${nextProps.auctions.current.id}`)
       }
     }
   }
 
   render() {
-    const {errors, current} = this.state;
+    const {errors} = this.state;
     const {isAuthenticated} = this.props.auth;
     const {classes} = this.props;
-
-    if (current) {
-      this.props.enqueueSnackbar(
-        `Utworzono aukcję ${current.title}`,
-        {variant: 'success'});
-      this.props.history.push(`/auction/${current.id}`)
-    }
 
     return (
       <div>
@@ -185,7 +182,6 @@ class AddAuction extends Component {
                 ref={ref => {
                   this.InputLabelRef = ref;
                 }}
-                htmlFor="outlined-age-simple"
               >
                 Czas
               </InputLabel>
@@ -197,16 +193,20 @@ class AddAuction extends Component {
                     labelWidth={this.state.labelWidth}
                     name="endDate"
                     id="endDate"
+
+                    error={errors.endDate && true}
                   />
                 }
               >
-                <MenuItem value={10}>1 dzień</MenuItem>
-                <MenuItem value={20}>2 dni</MenuItem>
-                <MenuItem value={40}>4 dni</MenuItem>
-                <MenuItem value={50}>7 dni</MenuItem>
-                <MenuItem value={60}>14 dni</MenuItem>
-                <MenuItem value={70}>31 dni</MenuItem>
+
+                <MenuItem value={1}>1 dzień</MenuItem>
+                <MenuItem value={2}>2 dni</MenuItem>
+                <MenuItem value={4}>4 dni</MenuItem>
+                <MenuItem value={7}>7 dni</MenuItem>
+                <MenuItem value={14}>14 dni</MenuItem>
+                <MenuItem value={31}>31 dni</MenuItem>
               </Select>
+              <FormHelperText error={true}>{errors.endDate && errors.endDate}</FormHelperText>
             </FormControl>
 
             <TextField

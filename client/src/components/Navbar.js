@@ -93,7 +93,8 @@ class Navbar extends Component {
   handleLogout = () => {
     this.setState({anchorEl: null});
     this.props.logoutUser();
-    this.props.enqueueSnackbar('Zostałeś wylogowany.', {variant: 'warning'})
+    this.props.enqueueSnackbar('Zostałeś wylogowany.', {variant: 'warning'});
+    this.props.history.push('/');
   };
 
   toggleDrawer = () => {
@@ -119,8 +120,9 @@ class Navbar extends Component {
   render() {
     const {anchorEl, currentTab, isDrawerOpen} = this.state;
     const isMenuOpen = Boolean(anchorEl);
-    const {isAuthenticated} = this.props.auth;
+    const {isAuthenticated, user} = this.props.auth;
     const {classes} = this.props;
+    console.log(this.props);
 
     const sideDrawer = (
       <div className={classes.list}>
@@ -152,7 +154,10 @@ class Navbar extends Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profil</MenuItem>
+        <MenuItem onClick={() => {
+          this.props.history.push(`/profile/${user.name}`);
+          this.handleMenuClose();
+        }}>Profil</MenuItem>
         <MenuItem onClick={this.handleLogout}>Wyloguj</MenuItem>
       </Menu>
     );

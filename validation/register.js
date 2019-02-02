@@ -8,6 +8,18 @@ module.exports = function validateRegisterInput(data) {
     data.email = !isEmpty(data.email) ? data.email : '';
     data.password = !isEmpty(data.password) ? data.password : '';
     data.password2 = !isEmpty(data.password2) ? data.password2 : '';
+    // data.telephone = !isEmpty(data.telephone) ? data.telephone : '';
+    data.firstName = !isEmpty(data.firstName) ? data.firstName : '';
+    data.lastName = !isEmpty(data.lastName) ? data.lastName : '';
+
+
+    if (Validator.isEmpty(data.firstName)) {
+        errors.firstName = 'Podaj swoje imię';
+    }
+
+    if (Validator.isEmpty(data.lastName)) {
+        errors.lastName = 'Podaj swoje nazwisko';
+    }
 
 
     if (!Validator.isLength(data.name, {min: 3, max: 30})) {
@@ -40,6 +52,14 @@ module.exports = function validateRegisterInput(data) {
 
     if (!Validator.equals(data.password, data.password2)) {
         errors.password2 = 'Hasła muszą się zgadzać';
+    }
+
+    if(data.telephone && !Validator.isLength(data.telephone, {min: 9, max: 12})) {
+        errors.telephone = 'Zła długość';
+    }
+
+    if(data.telephone && !Validator.isNumeric(data.telephone)) {
+        errors.telephone = 'To nie są cyfry';
     }
 
     return {

@@ -14,7 +14,7 @@ import ButtonLink from './ButtonLink';
 import {Redirect} from "react-router-dom";
 
 import {connect} from "react-redux";
-import {registerUser} from "../actions/authActions";
+import {registerUser, clearRegister, clearErrors} from "../actions/authActions";
 
 import {withStyles} from '@material-ui/core/styles';
 
@@ -32,7 +32,7 @@ const styles = theme => ({
   },
   card: {
     width: '25em',
-    margin: '5em auto',
+    margin: '1em auto',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
       margin: 0,
@@ -42,11 +42,20 @@ const styles = theme => ({
 });
 
 class Register extends Component {
+  constructor(props) {
+    super(props);
+    this.props.clearRegister();
+    this.props.clearErrors();
+  }
   state = {
+    firstName: '',
+    lastName: '',
     name: '',
     email: '',
     password: '',
     password2: '',
+    telephone: '',
+    address: '',
     errors: {},
   };
 
@@ -64,18 +73,17 @@ class Register extends Component {
     e.preventDefault();
 
     const user = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
       name: this.state.name,
       email: this.state.email,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
+      telephone: this.state.telephone,
+      address: this.state.address,
     };
 
-    // console.log(user);
-
-
     this.props.registerUser(user);
-
-
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
@@ -84,7 +92,12 @@ class Register extends Component {
     }
     if (nextProps.auth) {
       if (nextProps.auth.registerSuccess) {
-        this.setState({registerSuccess: true})
+        if (nextProps.auth.registerSuccess) {
+          this.props.enqueueSnackbar('Konto utworzone pomyślnie. Możesz się teraz zalogować.', {variant: 'success'})
+        } else if (nextProps.auth.isAuthenticated) {
+          this.props.enqueueSnackbar('Masz już konto.', {variant: 'error'})
+        }
+
       }
     }
   }
@@ -93,11 +106,7 @@ class Register extends Component {
     const {errors, registerSuccess} = this.state;
     const {isAuthenticated} = this.props.auth;
     const {classes} = this.props;
-    if (registerSuccess) {
-      this.props.enqueueSnackbar('Konto utworzone pomyślnie. Możesz się teraz zalogować.', {variant: 'success'})
-    } else if (isAuthenticated) {
-      this.props.enqueueSnackbar('Masz już konto.', {variant: 'error'})
-    }
+
     return (
       <div className={classes.container}>
         {(registerSuccess || isAuthenticated) && <Redirect to={"/"}/>}
@@ -123,6 +132,32 @@ class Register extends Component {
                 {'Rejestracja'}
               </Typography>
               <Grid container spacing={16}>
+                <Grid item xs={6}>
+                  <TextField
+                    id={"firstName"}
+                    label={"Imię"}
+                    name={"firstName"}
+                    onChange={this.handleChange('firstName')}
+                    className={"width-100"}
+                    value={this.state.firstName}
+                    helperText={errors.firstName && errors.firstName}
+                    error={errors.firstName && true}
+
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    id={"lastName"}
+                    label={"Nazwisko"}
+                    name={"lastName"}
+                    onChange={this.handleChange('lastName')}
+                    className={"width-100"}
+                    value={this.state.lastName}
+                    helperText={errors.lastName && errors.lastName}
+                    error={errors.lastName && true}
+
+                  />
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     id={"name"}
@@ -175,6 +210,31 @@ class Register extends Component {
                     error={errors.password2 && true}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id={"telephone"}
+                    label={"Numer telefonu"}
+                    name={"telephone"}
+                    onChange={this.handleChange('telephone')}
+                    className={"width-100"}
+                    value={this.state.telephone}
+                    helperText={errors.telephone && errors.telephone}
+                    error={errors.telephone && true}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id={"address"}
+                    label={"Adres"}
+                    name={"address"}
+                    onChange={this.handleChange('address')}
+                    type="textarea"
+                    className={"width-100"}
+                    value={this.state.address}
+                    helperText={errors.address && errors.address}
+                    error={errors.address && true}
+                  />
+                </Grid>
               </Grid>
             </CardContent>
             <Divider/>
@@ -209,4 +269,8 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, {registerUser})(withSnackbar(withStyles(styles)(Register)));
+export default connect(mapStateToProps, {
+  registerUser,
+  clearRegister,
+  clearErrors
+})(withSnackbar(withStyles(styles)(Register)));

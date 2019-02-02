@@ -1,4 +1,10 @@
-import {GET_ERRORS, REGISTER_SUCCESS, SET_CURRENT_USER} from "../constants";
+import {
+  CLEAR_ERRORS,
+  CLEAR_REGISTER,
+  GET_ERRORS,
+  REGISTER_SUCCESS,
+  SET_CURRENT_USER
+} from "../constants";
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
@@ -10,7 +16,7 @@ export const registerUser = (userData) => dispatch => {
             console.log(res.data);
             dispatch({
                 type: REGISTER_SUCCESS,
-                payload: 'successssssssssss'
+                payload: 'success'
             })
         })
         .catch(err => {
@@ -55,3 +61,15 @@ export const logoutUser = () => dispatch => {
     setAuthToken(false);
     dispatch(setCurrentUser({}));
 };
+
+export const clearRegister = () => dispatch => {
+    dispatch({
+      type: CLEAR_REGISTER
+    })
+};
+
+export const clearErrors = () => dispatch => {
+  dispatch({
+    type: CLEAR_ERRORS
+  })
+}

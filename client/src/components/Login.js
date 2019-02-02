@@ -42,7 +42,7 @@ const styles = theme => ({
 
 class Login extends Component {
     state = {
-        email: '',
+        name: '',
         password: '',
         errors: {},
     };
@@ -61,7 +61,7 @@ class Login extends Component {
         e.preventDefault();
 
         const user = {
-            email: this.state.email,
+            name: this.state.name,
             password: this.state.password
         };
         this.props.loginUser(user);
@@ -69,7 +69,11 @@ class Login extends Component {
 
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.errors) {
+            console.log(nextProps.errors);
             this.setState({errors: nextProps.errors})
+        }
+        if (nextProps.auth.isAuthenticated) {
+            this.props.enqueueSnackbar('Zalogowano pomyślnie.', { variant: 'success' })
         }
     }
 
@@ -78,9 +82,6 @@ class Login extends Component {
         const { isAuthenticated } = this.props.auth;
         const { classes } = this.props;
 
-        if (isAuthenticated) {
-            this.props.enqueueSnackbar('Zalogowano pomyślnie.', { variant: 'success' })
-        }
         return (
             <div>
                 {isAuthenticated && <Redirect to={"/"}/>}
@@ -108,14 +109,14 @@ class Login extends Component {
                             <Grid container spacing={16}>
                                 <Grid item xs={12}>
                                     <TextField
-                                        id={"email"}
-                                        label={"E-mail"}
-                                        name={"email"}
-                                        onChange={this.handleChange('email')}
+                                        id={"name"}
+                                        label={"Nazwa użytkownika"}
+                                        name={"name"}
+                                        onChange={this.handleChange('name')}
                                         className={"width-100"}
-                                        value={this.state.email}
-                                        helperText={errors.email && errors.email}
-                                        error={errors.email && true}
+                                        value={this.state.name}
+                                        helperText={errors.name && errors.name}
+                                        error={errors.name && true}
 
                                     />
                                 </Grid>

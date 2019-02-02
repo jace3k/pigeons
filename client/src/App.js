@@ -17,6 +17,7 @@ import LastAuctions from "./components/LastAuctions";
 import Archive from "./components/Archive";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Profile from "./components/Profile";
 
 const theme = createMuiTheme({
     palette: {
@@ -43,6 +44,8 @@ class App extends Component {
                             <Route exact path={"/auction/:id"} component={Auction}/>
                             <Route exact path={"/register"} component={Register} />
                             <Route exact path={"/login"} component={Login}/>
+                            <Route exact path={"/profile"} component={Profile}/>
+                            <Route exact path={"/profile/:name"} component={Profile}/>
                         </main>
                         <footer>
                             <Route path={"/"} component={Footer}/>

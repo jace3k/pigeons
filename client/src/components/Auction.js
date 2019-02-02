@@ -7,6 +7,7 @@ import img from '../img/background.jpg';
 import {SECONDARY_COLOR} from "../constants";
 import {connect} from "react-redux";
 import {fetchAuctionDetails} from '../actions/auctionActions'
+import {dislikeUser, likeUser, clearLikes} from "../actions/userActions";
 import Loader from 'react-loader-spinner'
 import ImageGallery from 'react-image-gallery';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +17,11 @@ import Divider from "@material-ui/core/es/Divider/Divider";
 
 import Countdown from 'react-countdown-now';
 import Button from "@material-ui/core/es/Button/Button";
+
+import ThumbUp from "@material-ui/icons/ThumbUp";
+import ThumbDown from "@material-ui/icons/ThumbDown";
+import IconButton from "@material-ui/core/IconButton";
+import {withSnackbar} from "notistack";
 
 
 const styles = theme => ({
@@ -33,7 +39,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
       margin: 0,
-      padding: '0.3em'
+      padding: 0,
     }
   },
   topcard: {
@@ -55,7 +61,9 @@ const styles = theme => ({
     display: 'flex',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
-      alignItems: 'center',
+      alignItems: 'left',
+      margin: 0,
+      padding: 0,
     }
 
   },
@@ -64,7 +72,8 @@ const styles = theme => ({
     maxWidth: '50%',
     padding: '0.3em',
     [theme.breakpoints.down('sm')]: {
-      padding: '0.3em',
+      padding: 0,
+      maxWidth: '100%'
     }
   },
   description: {
@@ -81,35 +90,82 @@ const styles = theme => ({
   bold: {
     fontWeight: 600,
   },
+  greencolor: {
+    color: 'green',
+  },
+  redcolor: {
+    color: 'red',
+  },
 });
 
 
 class Auction extends Component {
   constructor(props) {
     super(props);
+    this.props.clearLikes();
     this.props.fetchAuctionDetails(this.props.match.params.id);
   }
 
   state = {
     error: null,
     auction: null,
+    like: null,
+    dislike: null,
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
+    console.log("PROPS", nextProps);
     if (nextProps.auctions) {
       this.setState({
         auction: nextProps.auctions.current,
         error: nextProps.auctions.error,
       })
     }
+
+    if (nextProps.users) {
+      if (nextProps.users.like && nextProps.users.like > 0) {
+        // zalajkowano
+
+      }
+
+      if (nextProps.users.like && nextProps.users.like < 0) {
+        // cofnieto lajka
+
+      }
+
+      if (nextProps.users.dislike && nextProps.users.dislike > 0) {
+        // znienawidzono
+
+      }
+
+      if (nextProps.users.dislike && nextProps.users.dislike < 0) {
+        // cofnieto znienawidzenie
+
+      }
+      this.setState({
+        like: nextProps.users.like,
+        dislike: nextProps.users.dislike,
+      })
+    }
   }
 
   render() {
-    const {auction, error} = this.state;
+    const {auction, error, like, dislike} = this.state;
     const {classes} = this.props;
+    console.log('state', this.state);
+
+    if (like) {
+      auction.owner.likes += like;
+    }
+
+    if (dislike) {
+      auction.owner.dislikes += dislike;
+    }
+
     let btnBack = (
       <Button
-        variant={"outlined"}
+        // variant={"outlined"}
+        color={"secondary"}
         className={classes.topcarditem}
         onClick={() => this.props.history.push('/')}
       >Wróć</Button>
@@ -117,9 +173,10 @@ class Auction extends Component {
 
     let btnObserve = (
       <Button
-        variant={"outlined"}
+        // variant={"outlined"}
+        color={"secondary"}
         className={classes.topcarditem}
-        onClick={()=> alert('obserwowanie!')}
+        onClick={() => alert('obserwowanie!')}
       >Obserwuj</Button>
     );
 
@@ -165,10 +222,23 @@ class Auction extends Component {
                   Sprzedawca: {auction.owner.name}
                 </Typography>
                 <Typography>
-                  <span className={classes.bold}>{'Kontakt: '}</span> 500 323 222
+                  <span className={classes.bold}>{'Kontakt: '}</span> {auction.owner.telephone}
                 </Typography>
                 <Typography>
-                  <span className={classes.bold}>{'Lajki: '}</span> 10
+                  <span className={[classes.bold, classes.greencolor].join(' ')}>
+                    <IconButton onClick={() => {
+                      this.props.likeUser(auction.owner.name)
+                    }}><ThumbUp/></IconButton>
+                    {auction.owner.likes}
+
+                  </span>
+                  {' '}
+                  <span className={[classes.bold, classes.redcolor].join(' ')}>
+                    <IconButton onClick={() => {
+                      this.props.dislikeUser(auction.owner.name);
+                    }}><ThumbDown/></IconButton>
+                    {auction.owner.dislikes}
+                  </span>
                 </Typography>
                 <Typography>
                   <span className={classes.bold}>{'Wyświetlenia: '}</span> {auction.viewsCount}
@@ -194,9 +264,6 @@ class Auction extends Component {
 
               </div>
             </div>
-
-
-
             <Grid container spacing={24}>
               <Grid item xs={12}>
                 <Typography variant={"h6"}>
@@ -223,6 +290,12 @@ class Auction extends Component {
 const mapStateToProps = state => ({
   auth: state.auth,
   auctions: state.auctions,
+  users: state.users,
 });
 
-export default connect(mapStateToProps, {fetchAuctionDetails})(withStyles(styles)(Auction));
+export default connect(mapStateToProps, {
+  fetchAuctionDetails,
+  likeUser,
+  dislikeUser,
+  clearLikes,
+})(withSnackbar(withStyles(styles)(Auction)));

@@ -1,4 +1,4 @@
-import {REGISTER_SUCCESS, SET_CURRENT_USER} from "../constants";
+import {REGISTER_SUCCESS, SET_CURRENT_USER, CLEAR_REGISTER} from "../constants";
 import isEmpty from "../utils/isEmpty";
 
 const initialState = {
@@ -15,6 +15,11 @@ export default (state = initialState, action) => {
                 ...state,
                 isAuthenticated: !isEmpty(action.payload),
                 user: action.payload
+            };
+        case CLEAR_REGISTER:
+            return {
+                ...state,
+                registerSuccess: null,
             };
         default:
             return state;
