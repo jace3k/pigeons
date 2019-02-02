@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Grid from '@material-ui/core/Grid';
 import ListCard from "./ListCard";
+import Card from '@material-ui/core/Card';
 
 import {withStyles} from '@material-ui/core/styles';
 import {fetchAuctions} from "../actions/auctionActions";
@@ -28,6 +29,13 @@ const styles = theme => ({
     justifyContent: 'center',
     width: '100%',
   },
+  card: {
+    width: '100%',
+    padding: '2em',
+    margin: '2em',
+    display: 'flex',
+    justifyContent: 'center',
+  }
 });
 
 
@@ -39,7 +47,7 @@ class Main extends Component {
 
   state = {
     xs: 12,
-    auctions: []
+    auctions: null,
   };
 
 
@@ -55,7 +63,7 @@ class Main extends Component {
 
   render() {
     const {classes} = this.props;
-    const {errors, auctions} = this.state;
+    const {auctions} = this.state;
 
     let component = (
       <div className={classes.loader}>
@@ -67,16 +75,19 @@ class Main extends Component {
         />
       </div>
     );
-    if (errors) {
-      component = <div>{errors.auctions}</div>
-    } else if (auctions.length !== 0) {
-      component = auctions.map(auction => {
-        return (
-          <Grid item xs={this.state.xs} className={classes.griditem} key={auction.title}>
-            <ListCard history={this.props.history} auction={auction}/>
-          </Grid>
-        );
-      })
+
+    if (auctions) {
+      if (auctions.length === 0) {
+        component = <Card className={classes.card}>Brak aukcji!</Card>;
+      } else {
+        component = auctions.map(auction => {
+          return (
+            <Grid item xs={this.state.xs} className={classes.griditem} key={auction.title}>
+              <ListCard history={this.props.history} auction={auction}/>
+            </Grid>
+          );
+        })
+      }
     }
 
     return (

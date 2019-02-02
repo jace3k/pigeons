@@ -14,14 +14,11 @@ import ButtonLink from './ButtonLink';
 import {Redirect} from "react-router-dom";
 
 import {connect} from "react-redux";
-import {registerUser, clearRegister, clearErrors} from "../actions/authActions";
+import {clearErrors, clearRegister, registerUser} from "../actions/authActions";
 
 import {withStyles} from '@material-ui/core/styles';
 
-import {
-  LOGIN_ELEMENT,
-  SECONDARY_COLOR
-} from "../constants";
+import {LOGIN_ELEMENT, SECONDARY_COLOR} from "../constants";
 
 import {withSnackbar} from "notistack";
 
@@ -47,6 +44,7 @@ class Register extends Component {
     this.props.clearRegister();
     this.props.clearErrors();
   }
+
   state = {
     firstName: '',
     lastName: '',
@@ -93,6 +91,7 @@ class Register extends Component {
     if (nextProps.auth) {
       if (nextProps.auth.registerSuccess) {
         if (nextProps.auth.registerSuccess) {
+          this.setState({registerSuccess: true});
           this.props.enqueueSnackbar('Konto utworzone pomyślnie. Możesz się teraz zalogować.', {variant: 'success'})
         } else if (nextProps.auth.isAuthenticated) {
           this.props.enqueueSnackbar('Masz już konto.', {variant: 'error'})
