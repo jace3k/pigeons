@@ -7,7 +7,7 @@ import img from '../img/background.jpg';
 import {SECONDARY_COLOR} from "../constants";
 import {connect} from "react-redux";
 import {fetchAuctionDetails} from '../actions/auctionActions'
-import {dislikeUser, likeUser, clearLikes} from "../actions/userActions";
+import {clearLikes, dislikeUser, likeUser} from "../actions/userActions";
 import Loader from 'react-loader-spinner'
 import ImageGallery from 'react-image-gallery';
 import Grid from '@material-ui/core/Grid';
@@ -23,6 +23,7 @@ import ThumbDown from "@material-ui/icons/ThumbDown";
 import IconButton from "@material-ui/core/IconButton";
 import {withSnackbar} from "notistack";
 
+import Badge from '@material-ui/core/Badge';
 
 const styles = theme => ({
   container: {
@@ -98,7 +99,6 @@ const styles = theme => ({
   },
 });
 
-
 class Auction extends Component {
   constructor(props) {
     super(props);
@@ -114,7 +114,6 @@ class Auction extends Component {
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log("PROPS", nextProps);
     if (nextProps.auctions) {
       this.setState({
         auction: nextProps.auctions.current,
@@ -125,21 +124,30 @@ class Auction extends Component {
     if (nextProps.users) {
       if (nextProps.users.like && nextProps.users.like > 0) {
         // zalajkowano
-
+        this.props.enqueueSnackbar(
+          `Polubiono sprzedawcę ${nextProps.auctions.current.owner.name}`,
+          {variant: 'success'});
       }
 
       if (nextProps.users.like && nextProps.users.like < 0) {
         // cofnieto lajka
-
+        this.props.enqueueSnackbar(
+          `Cofnięto polubienie ${nextProps.auctions.current.owner.name}`,
+          {variant: 'success'});
       }
 
       if (nextProps.users.dislike && nextProps.users.dislike > 0) {
         // znienawidzono
-
+        this.props.enqueueSnackbar(
+          `Znienawidzono sprzedawcę ${nextProps.auctions.current.owner.name}`,
+          {variant: 'error'});
       }
 
       if (nextProps.users.dislike && nextProps.users.dislike < 0) {
         // cofnieto znienawidzenie
+        this.props.enqueueSnackbar(
+          `Cofnięto znienawidzenie ${nextProps.auctions.current.owner.name}`,
+          {variant: 'success'});
 
       }
       this.setState({
@@ -201,7 +209,7 @@ class Auction extends Component {
         <div>
           <Card className={classes.topcard}>
             {btnBack}
-            {btnObserve}
+            {this.props.auth.isAuthenticated && btnObserve}
           </Card>
           <Card className={classes.card}>
             <div className={classes.flexContainer}>
@@ -226,18 +234,23 @@ class Auction extends Component {
                 </Typography>
                 <Typography>
                   <span className={[classes.bold, classes.greencolor].join(' ')}>
-                    <IconButton onClick={() => {
+                    <IconButton disabled={!this.props.auth.isAuthenticated} onClick={() => {
                       this.props.likeUser(auction.owner.name)
-                    }}><ThumbUp/></IconButton>
-                    {auction.owner.likes}
-
+                    }}>
+                    <Badge badgeContent={auction.owner.likes} color={"secondary"}>
+                      <ThumbUp/>
+                    </Badge>
+                    </IconButton>
                   </span>
                   {' '}
                   <span className={[classes.bold, classes.redcolor].join(' ')}>
-                    <IconButton onClick={() => {
+                    <IconButton disabled={!this.props.auth.isAuthenticated} onClick={() => {
                       this.props.dislikeUser(auction.owner.name);
-                    }}><ThumbDown/></IconButton>
-                    {auction.owner.dislikes}
+                    }}>
+                      <Badge badgeContent={auction.owner.dislikes} color={"error"}>
+                      <ThumbDown/>
+                      </Badge>
+                    </IconButton>
                   </span>
                 </Typography>
                 <Typography>

@@ -50,6 +50,36 @@ router.get('/profile/:name', (req, res) => {
     })
 });
 
+router.get('/profile', passport.authenticate('jwt', {session: false}), (req, res) => {
+  User.find({where: {name: req.user.name}})
+    .then(user => {
+      if (user) {
+        return res.json({
+          id: user.id,
+          name: user.name,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          telephone: user.telephone,
+          address: user.address,
+          date: user.date,
+          likes: user.likes,
+          dislikes: user.dislikes,
+        })
+      } else {
+        return res.status(400).json({user: "nie znaleziono"})
+      }
+    })
+});
+router.get('/:id/auctions', (req, res) => {
+  Auction.findAndCountAll({where: {
+    owner_id: req.params.id
+  }}).then(auctions => {
+    return res.json(auctions);
+  })
+});
+
+
 router.post('/register', (req, res) => {
   const {errors, isValid} = validateRegisterInput(req.body);
   if (!isValid) {
