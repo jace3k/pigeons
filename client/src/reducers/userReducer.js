@@ -3,7 +3,7 @@ import {
   LIKE_USER_FAILED,
   DISLIKE_USER,
   DISLIKE_USER_FAILED,
-  CLEAR_LIKES, FETCH_USER_DETAILS, FETCH_USER_DETAILS_FAILED, FETCH_USER_AUCTIONS, FETCH_USER_AUCTIONS_FAILED
+  CLEAR_LIKES, FETCH_USER_DETAILS, FETCH_USER_DETAILS_FAILED
 } from "../constants";
 
 const initialState = {
@@ -53,16 +53,6 @@ export default (state = initialState, action) => {
       return {
         error: action.payload,
         user: null,
-      };
-    case FETCH_USER_AUCTIONS:
-      return {
-        error: null,
-        userAuctions: action.payload,
-      };
-    case FETCH_USER_AUCTIONS_FAILED:
-      return {
-        error: action.payload,
-        userAuctions: null,
       };
     default:
       return state;

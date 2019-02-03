@@ -6,9 +6,8 @@ import Card from '@material-ui/core/Card';
 import {withStyles} from '@material-ui/core/styles';
 import {fetchAuctions} from "../actions/auctionActions";
 import {connect} from "react-redux";
-import Loader from './Loader'
+import Loader from 'react-loader-spinner'
 import {SECONDARY_COLOR} from "../constants";
-import AuctionList from "./AuctionList";
 
 
 const styles = theme => ({
@@ -66,16 +65,37 @@ class Main extends Component {
     const {classes} = this.props;
     const {auctions} = this.state;
 
-    let component = <Loader />;
+    let component = (
+      <div className={classes.loader}>
+        <Loader
+          type="Plane"
+          color={SECONDARY_COLOR}
+          height="100"
+          width="100"
+        />
+      </div>
+    );
 
     if (auctions) {
       if (auctions.length === 0) {
         component = <Card className={classes.card}>Brak aukcji!</Card>;
       } else {
-        component = <AuctionList auctions={auctions} history={this.props.history} showFilter={true} />
+        component = auctions.map(auction => {
+          return (
+            <Grid item xs={this.state.xs} className={classes.griditem} key={auction.title}>
+              <ListCard history={this.props.history} auction={auction}/>
+            </Grid>
+          );
+        })
       }
     }
-    return component;
+
+    return (
+      <Grid container>
+        <div style={{height: '2em'}}/>
+        {component}
+      </Grid>
+    );
   }
 }
 
