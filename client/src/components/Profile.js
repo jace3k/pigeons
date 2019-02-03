@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
-import {fetchUserDetails} from "../actions/userActions";
+import {fetchUserDetails, fetchUserAuctions} from "../actions/userActions";
 import {connect} from "react-redux";
-import Loader from "react-loader-spinner";
-import {SECONDARY_COLOR} from "../constants";
+import Loader from "./Loader";
 import {withStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/es/Card/Card";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Divider from "@material-ui/core/es/Divider/Divider";
-import Button from "@material-ui/core/es/Button/Button";
+import AuctionList from "./AuctionList";
 
 const styles = theme => ({
   loader: {
@@ -33,24 +32,43 @@ const styles = theme => ({
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.props.fetchUserDetails(this.props.match.params.name);
+    if (this.props.match.params.name) {
+      this.props.fetchUserDetails(this.props.match.params.name)
+    } else {
+      this.props.fetchUserDetails();
+    }
+
+  }
+
+  state = {
+    user: null,
+  };
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.user) {
+      this.setState({
+        user: nextProps.user,
+      });
+      this.props.fetchUserAuctions(nextProps.user.id);
+      // console.log(nextProps.user.id);
+    }
+
+    if (nextProps.userAuctions) {
+      this.setState({
+        userAuctions: nextProps.userAuctions.rows
+      })
+    }
   }
 
   render() {
     const {classes} = this.props;
-    let component = (
-      <div className={classes.loader}>
-        <Loader
-          type="Plane"
-          color={SECONDARY_COLOR}
-          height="100"
-          width="100"
-        />
-      </div>
-    );
+    const {userAuctions, user} = this.state;
+    let component = <Loader />;
+    let userAuctionsComponent = <Loader />;
 
-    if (this.props.user) {
-      const {id, name, firstName, lastName, email, address, telephone, date, likes, dislikes} = this.props.user;
+    if (this.state.user && this.props.userAuctions) {
+      userAuctionsComponent = <AuctionList auctions={userAuctions} showFilter={false} history={this.props.history} />;
+      const {id, name, firstName, lastName, email, address, telephone, date, likes, dislikes} = user;
       component = (
         <div>
           <Card className={classes.card}>
@@ -80,6 +98,8 @@ class Profile extends Component {
             <Typography variant={"h5"}>
               Twoje aukcje
             </Typography>
+            <div style={{marginBottom: '0.3em'}} />
+            {userAuctionsComponent}
             <Divider/>
           </Card>
           <Card className={classes.card}>
@@ -102,8 +122,9 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
   user: state.users.user,
+  userAuctions: state.users.userAuctions,
   errors: state.users.error,
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {fetchUserDetails})(withStyles(styles)(Profile));
+export default connect(mapStateToProps, {fetchUserDetails, fetchUserAuctions})(withStyles(styles)(Profile));

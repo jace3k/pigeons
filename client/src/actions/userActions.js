@@ -2,7 +2,7 @@ import {
   LIKE_USER, LIKE_USER_FAILED,
   DISLIKE_USER, DISLIKE_USER_FAILED,
   FETCH_USER_DETAILS, FETCH_USER_DETAILS_FAILED,
-  CLEAR_LIKES,
+  CLEAR_LIKES, FETCH_USER_AUCTIONS, FETCH_USER_AUCTIONS_FAILED,
 } from "../constants";
 
 import axios from 'axios';
@@ -52,8 +52,15 @@ export const clearLikes = () => dispatch => {
 };
 
 export const fetchUserDetails = (name) => dispatch => {
+  let path;
+  if (name) {
+    path = `/api/users/profile/${name}`;
+  } else {
+    path = `/api/users/profile`;
+  }
+
   axios
-    .get(`/api/users/profile/${name}`)
+    .get(path)
     .then(res => {
       console.log(res.data);
       dispatch({
@@ -65,6 +72,25 @@ export const fetchUserDetails = (name) => dispatch => {
       console.log(err.response.data);
       dispatch({
         type: FETCH_USER_DETAILS_FAILED,
+        payload: err.response.data,
+      })
+    })
+};
+
+export const fetchUserAuctions = (id) => dispatch => {
+  axios
+    .get(`/api/users/${id}/auctions`)
+    .then(res => {
+      console.log('fetchUserAuctions', res.data);
+      dispatch({
+        type: FETCH_USER_AUCTIONS,
+        payload: res.data,
+      })
+    })
+    .catch(err => {
+      console.log(err.response.data);
+      dispatch({
+        type: FETCH_USER_AUCTIONS_FAILED,
         payload: err.response.data,
       })
     })
