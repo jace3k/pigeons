@@ -71,8 +71,11 @@ class AddAuction extends Component {
   state = {
     title: '',
     description: '',
+    ring: '',
     price: '',
     endDate: 7,
+    sex: '',
+    race: '',
     images: [],
     errors: {},
 
@@ -94,8 +97,11 @@ class AddAuction extends Component {
     const auctionData = {
       title: this.state.title,
       description: this.state.description,
+      ring: this.state.ring,
       price: this.state.price,
       endDate: this.state.endDate,
+      sex: this.state.sex,
+      race: this.state.race,
       images: this.state.images,
     };
 
@@ -150,6 +156,18 @@ class AddAuction extends Component {
             />
 
             <TextField
+              id={"ring"}
+              label={"Numer obrączki"}
+              name={"ring"}
+              onChange={this.handleChange('ring')}
+              variant={"outlined"}
+              value={this.state.ring}
+              helperText={errors.ring && errors.ring}
+              error={errors.ring && true}
+              className={classes.textfield}
+            />
+
+            <TextField
               id={"description"}
               label={"Opis"}
               name={"description"}
@@ -160,6 +178,18 @@ class AddAuction extends Component {
               error={errors.description && true}
               className={classes.textfield}
               multiline
+            />
+
+            <TextField
+              id={"race"}
+              label={"Rasa"}
+              name={"race"}
+              onChange={this.handleChange('race')}
+              variant={"outlined"}
+              value={this.state.race}
+              helperText={errors.race && errors.race}
+              error={errors.race && true}
+              className={classes.textfield}
             />
 
             <TextField
@@ -179,10 +209,7 @@ class AddAuction extends Component {
 
             <FormControl variant="outlined" className={classes.textfieldsmall}>
               <InputLabel
-                ref={ref => {
-                  this.InputLabelRef = ref;
-                }}
-              >
+                ref={ref => this.InputLabelRef = ref}>
                 Czas
               </InputLabel>
               <Select
@@ -193,12 +220,8 @@ class AddAuction extends Component {
                     labelWidth={this.state.labelWidth}
                     name="endDate"
                     id="endDate"
-
-                    error={errors.endDate && true}
-                  />
-                }
-              >
-
+                    error={errors.endDate && true} />
+                }>
                 <MenuItem value={1}>1 dzień</MenuItem>
                 <MenuItem value={2}>2 dni</MenuItem>
                 <MenuItem value={4}>4 dni</MenuItem>
@@ -207,6 +230,26 @@ class AddAuction extends Component {
                 <MenuItem value={31}>31 dni</MenuItem>
               </Select>
               <FormHelperText error={true}>{errors.endDate && errors.endDate}</FormHelperText>
+            </FormControl>
+
+            <FormControl variant="outlined" className={classes.textfieldsmall}>
+              <InputLabel>
+                Płeć
+              </InputLabel>
+              <Select
+                value={this.state.sex}
+                onChange={this.handleChange('sex')}
+                input={
+                  <OutlinedInput
+                    labelWidth={this.state.labelWidth}
+                    name="sex"
+                    id="sex"
+                    error={errors.sex && true}/>
+                }>
+                <MenuItem value={"Samiec"}>Samiec</MenuItem>
+                <MenuItem value={"Samica"}>Samica</MenuItem>
+              </Select>
+              <FormHelperText error={true}>{errors.sex && errors.sex}</FormHelperText>
             </FormControl>
 
             <TextField

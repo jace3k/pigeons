@@ -30,11 +30,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import PeopleIcon from '@material-ui/icons/People';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AddIcon from '@material-ui/icons/Add';
+import RulesIcon from '@material-ui/icons/Book';
 
 const drawerItemsLoggedOut = [
   {name: 'Zaloguj', link: '/login', icon: <LockIcon/>},
   {name: 'Załóż konto', link: '/register', icon: <AccessibilityIcon/>},
   {name: 'Aukcje', link: '/', icon: <ShopIcon/>},
+  {name: 'Regulamin', link: '/rules', icon: <RulesIcon/>},
 ];
 
 const drawerItemsLoggedIn = [
@@ -45,6 +47,7 @@ const drawerItemsLoggedIn = [
 const secondDrawerItemsLoggedIn = [
   {name: 'Dodaj Gołębia', link: '/add', icon: <AddIcon/>},
   {name: 'Aukcje', link: '/', icon: <ShopIcon/>},
+  {name: 'Regulamin', link: '/rules', icon: <RulesIcon/>},
 ];
 
 
@@ -214,6 +217,13 @@ class Navbar extends Component {
                 onClick={() => this.activate("/")}
               >
                 Aukcje
+              </ButtonLink>
+              <ButtonLink
+                to={"/rules"}
+                active={currentTab === '/rules'}
+                onClick={() => this.activate("/rules")}
+              >
+                Regulamin
               </ButtonLink>
               {isAuthenticated &&
               <ButtonLink

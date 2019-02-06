@@ -16,10 +16,13 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const endDate = Date.now() + 1000 * 60 * 60 * 24 * req.body.endDate;
   const newAuction = {
     title: req.body.title,
+    description: req.body.description,
+    ring: req.body.ring,
     price: req.body.price,
     endDate: endDate,
+    sex: req.body.sex,
+    race: req.body.race,
     isActive: endDate - Date.now() > 0,
-    description: req.body.description,
     images: [],                         // images implemented in future
     owner_id: req.user.id,
   };
@@ -43,9 +46,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           },
         });
       });
-
     })
-
 });
 
 router.get('/', (req, res) => {
@@ -77,6 +78,9 @@ router.get('/:id', (req, res) => {
             endDate: auction.endDate,
             isActive: auction.isActive,
             description: auction.description,
+            ring: auction.ring,
+            race: auction.race,
+            sex: auction.sex,
             images: auction.images,
             owner: {
               id: user.id,

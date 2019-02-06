@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 
 import img from '../img/background.jpg';
-import {SECONDARY_COLOR} from "../constants";
+import {PRIMARY_COLOR, SECONDARY_COLOR} from "../constants";
 import {connect} from "react-redux";
 import {fetchAuctionDetails} from '../actions/auctionActions'
 import {clearLikes, dislikeUser, likeUser} from "../actions/userActions";
@@ -24,6 +24,7 @@ import IconButton from "@material-ui/core/IconButton";
 import {withSnackbar} from "notistack";
 
 import Badge from '@material-ui/core/Badge';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = theme => ({
   container: {
@@ -225,9 +226,29 @@ class Auction extends Component {
                 <Typography variant={"h3"}>
                   {auction.title}
                 </Typography>
+                <Tooltip title={"Numer obrączki"} placement={"right"}>
+                <Typography variant={"h4"}>
+                  {auction.ring}
+                </Typography>
+                </Tooltip>
 
+
+                {/*<div style={{marginBottom: '1em'}} />*/}
                 <Typography variant={"h6"}>
-                  Sprzedawca: {auction.owner.name}
+                  Hodowca:{' '}
+                  <Button
+                    variant={"text"}
+
+                    // style={{
+                    //   backgroundColor: PRIMARY_COLOR,
+                    //   color: 'white',
+                    //   padding: '0.3em',
+                    //   borderRadius: '6px 6px 6px',
+                    //   cursor: 'pointer',
+                    // }}
+                    onClick={() => this.props.history.push(`/profile/${auction.owner.name}`)}>
+                    {auction.owner.name}
+                  </Button>
                 </Typography>
                 <Typography>
                   <span className={classes.bold}>{'Kontakt: '}</span> {auction.owner.telephone}
@@ -283,7 +304,15 @@ class Auction extends Component {
                   Opis
                 </Typography>
                 <Divider style={{marginBottom: '1em'}}/>
+
+                <b>Rasa:</b> {auction.race}
+                <br />
+                <b>Płeć:</b> {auction.sex}
+
+                <Divider style={{margin: '1em 0'}}/>
                 {auction.description}
+
+                <Divider style={{marginTop: '1em'}}/>
               </Grid>
 
             </Grid>

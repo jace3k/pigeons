@@ -18,6 +18,7 @@ import Archive from "./components/Archive";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import Rules from "./components/Rules";
 
 const theme = createMuiTheme({
     palette: {
@@ -46,6 +47,7 @@ class App extends Component {
                             <Route exact path={"/login"} component={Login}/>
                             <Route exact path={"/profile"} component={Profile}/>
                             <Route exact path={"/profile/:name"} component={Profile}/>
+                            <Route exact path={"/rules"} component={Rules}/>
                         </main>
                         <footer>
                             <Route path={"/"} component={Footer}/>

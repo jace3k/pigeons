@@ -28,7 +28,10 @@ const styles = theme => ({
       maxWidth: '100%',
       margin: 0,
       padding: 0,
-    }
+    },
+    [theme.breakpoints.up('xl')]: {
+      margin: '1em 25em',
+    },
   },
   filterArea: {
     display: 'flex',
