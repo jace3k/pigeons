@@ -50,7 +50,6 @@ class Profile extends Component {
         user: nextProps.user,
       });
       this.props.fetchUserAuctions(nextProps.user.id);
-      // console.log(nextProps.user.id);
     }
 
     if (nextProps.userAuctions) {

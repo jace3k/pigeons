@@ -145,13 +145,11 @@ class AuctionList extends Component {
             component = null;
           }
 
-
-          console.log(Number(auction.price), Number(this.state.priceMin));
-          if (this.state.priceMin !== '' && Number(auction.price) < Number(this.state.priceMin)) {
+          if (this.state.priceMin !== '' && Number(auction.currentPrice) < Number(this.state.priceMin)) {
             component = null;
           }
 
-          if (this.state.priceMax !== '' && Number(auction.price) > Number(this.state.priceMax)) {
+          if (this.state.priceMax !== '' && Number(auction.currentPrice) > Number(this.state.priceMax)) {
             component = null;
           }
 

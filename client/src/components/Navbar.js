@@ -125,7 +125,6 @@ class Navbar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const {isAuthenticated, user} = this.props.auth;
     const {classes} = this.props;
-    console.log(this.props);
 
     const sideDrawer = (
       <div className={classes.list}>

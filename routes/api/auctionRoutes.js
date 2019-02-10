@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const passport = require('passport');
 const validateAuctionInput = require('../../validation/auction');
+const validateBidInput = require('../../validation/bid');
 
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {errors, isValid} = validateAuctionInput(req.body);
@@ -18,12 +19,13 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     title: req.body.title,
     description: req.body.description,
     ring: req.body.ring,
-    price: req.body.price,
+    startPrice: req.body.price,
+    currentPrice: req.body.price,
     endDate: endDate,
     sex: req.body.sex,
     race: req.body.race,
     isActive: endDate - Date.now() > 0,
-    images: [],                         // images implemented in future
+    images: [],                            // images implemented in future
     owner_id: req.user.id,
   };
 
@@ -34,7 +36,9 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           id: auction.id,
           viewsCount: auction.viewsCount,
           title: auction.title,
-          price: auction.price,
+          startPrice: auction.startPrice,
+          currentPrice: auction.currentPrice,
+          currentWinner: auction.currentWinner,
           endDate: auction.endDate,
           isActive: auction.isActive,
           description: auction.description,
@@ -74,7 +78,9 @@ router.get('/:id', (req, res) => {
             id: auction.id,
             viewsCount: auction.viewsCount,
             title: auction.title,
-            price: auction.price,
+            startPrice: auction.startPrice,
+            currentPrice: auction.currentPrice,
+            currentWinner: auction.currentWinner,
             endDate: auction.endDate,
             isActive: auction.isActive,
             description: auction.description,
@@ -98,6 +104,67 @@ router.get('/:id', (req, res) => {
       }
     });
 });
+
+
+router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const {errors, isValid} = validateBidInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const auctionId = req.params.id;
+  const username = req.user.name;
+  const userId = req.user.id;
+  const bid = Number(req.body.bid);
+
+  Auction.findById(auctionId).then(auction => {
+    if (!auction) {
+      return res.status(400).json({
+        bid: 'nie znaleziono aukcji',
+        currentPrice: auction.currentPrice,
+        currentWinner: auction.currentWinner,
+      })
+    }
+
+    if (auction.owner_id === userId) {
+      return res.status(401).json({
+        bid: 'to twoja aukcja',
+        currentPrice: auction.currentPrice,
+        currentWinner: auction.currentWinner,
+      })
+    }
+
+    const difference = bid - auction.currentPrice;
+
+    if (auction.currentPrice >= bid || difference < 10) {
+      return res.status(400).json({
+        bid: 'minimalne podbicie: 10zł',
+        currentPrice: auction.currentPrice,
+        currentWinner: auction.currentWinner,
+        yourBid: bid,
+      })
+    }
+
+    auction.currentPrice = bid;
+    auction.currentWinner = username;
+    auction.save();
+
+    return res.json({
+      bid: 'podbiłeś aukcję pomyślnie',
+      currentPrice: auction.currentPrice,
+      currentWinner: auction.currentWinner,
+    })
+  })
+});
+
+
+
+
+
+
+
+
+
 
 
 router.get('/deactivate/:id', (req, res) => {

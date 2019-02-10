@@ -49,6 +49,7 @@ class Main extends Component {
   state = {
     xs: 12,
     auctions: null,
+    serverError: false,
   };
 
 
@@ -64,7 +65,7 @@ class Main extends Component {
 
   render() {
     const {classes} = this.props;
-    const {auctions} = this.state;
+    const {auctions, serverError, errors} = this.state;
 
     let component = <Loader />;
 
@@ -74,6 +75,10 @@ class Main extends Component {
       } else {
         component = <AuctionList auctions={auctions} history={this.props.history} showFilter={true} />
       }
+    }
+
+    if (errors) {
+      component = <Card className={classes.card}>Błąd serwera</Card>;
     }
     return component;
   }

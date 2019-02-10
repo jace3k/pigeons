@@ -97,7 +97,7 @@ class MediaControlCard extends Component {
                 Cena
               </Typography>
               <Typography variant="h6" className={classes.typoprice}>
-                {auction.price}{' zł'}
+                {auction.currentPrice}{' zł'}
               </Typography>
             </div>
           </div>

@@ -9,9 +9,17 @@ module.exports = (sequelize, type) => {
       type: type.TEXT,
       allowNull: false,
     },
-    price: {
+    startPrice: {
       type: type.DECIMAL(10, 2),
       allowNull: false,
+    },
+    currentPrice: {
+      type: type.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    currentWinner: {
+      type: type.TEXT,
+      allowNull: true,
     },
     endDate: {
       type: type.DATE,

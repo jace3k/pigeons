@@ -29,7 +29,12 @@ export const FETCH_USER_DETAILS_FAILED = 'FETCH_USER_DETAILS_FAILED';
 export const FETCH_USER_AUCTIONS = 'FETCH_USER_AUCTIONS';
 export const FETCH_USER_AUCTIONS_FAILED = 'FETCH_USER_AUCTIONS_FAILED';
 
+export const BID_AUCTION = 'BID_AUCTION';
+export const BID_AUCTION_FAILED = 'BID_AUCTION_FAILED';
+
 export const CLEAR_LIKES = 'CLEAR_LIKES';
+export const CLEAR_BID = 'CLEAR_BID';
+export const CLEAR_AUCTION = 'CLEAR_AUCTION';
 
 export const TITLE = 'Pigeon Aukcjia';
 export const LOGIN_ELEMENT = (<div style={{textAlign: 'center', width: '100%', color: '#AAA'}}>&copy; {TITLE}.</div>);
