@@ -12,6 +12,9 @@ const styles = theme => ({
   card: {
     // border: `3px solid ${SECONDARY_COLOR}`
   },
+  ended: {
+    opacity: '0.5',
+  },
   cardactionarea: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -27,7 +30,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       width: 100,
       minWidth: 100,
-      height: 220,
+      height: 160,
     }
   },
   titlearea: {
@@ -73,7 +76,7 @@ class MediaControlCard extends Component {
     const {classes, auction,} = this.props;
 
     return (
-      <Card className={classes.card}>
+      <Card className={this.props.ended ? classes.ended : classes.card}>
         <CardActionArea className={classes.cardactionarea}
                         onClick={() => this.props.history.push(`/auction/${auction.id}`)}>
           <div className={classes.imagecontainer}>
@@ -86,10 +89,10 @@ class MediaControlCard extends Component {
           <div className={classes.details}>
             <div className={classes.titlearea}>
               <Typography variant="h6">
-                {auction.title}
+                {auction.ring}{' '}{this.props.ended && "- KONIEC AUKCJI"}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                {auction.description}
+                {auction.race}
               </Typography>
             </div>
             <div className={classes.pricearea}>

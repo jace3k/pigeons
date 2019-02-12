@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import Grid from '@material-ui/core/Grid';
-import ListCard from "./ListCard";
 import Card from '@material-ui/core/Card';
 
 import {withStyles} from '@material-ui/core/styles';
 import {fetchAuctions} from "../actions/auctionActions";
 import {connect} from "react-redux";
 import Loader from './Loader'
-import {SECONDARY_COLOR} from "../constants";
 import AuctionList from "./AuctionList";
 
 
@@ -65,7 +62,7 @@ class Main extends Component {
 
   render() {
     const {classes} = this.props;
-    const {auctions, serverError, errors} = this.state;
+    const {auctions, errors} = this.state;
 
     let component = <Loader />;
 
@@ -73,7 +70,7 @@ class Main extends Component {
       if (auctions.length === 0) {
         component = <Card className={classes.card}>Brak aukcji!</Card>;
       } else {
-        component = <AuctionList auctions={auctions} history={this.props.history} showFilter={true} />
+        component = <AuctionList auctions={auctions} history={this.props.history} showFilter={true} hideEnded={true} />
       }
     }
 

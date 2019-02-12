@@ -16,7 +16,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
   const endDate = Date.now() + 1000 * 60 * 60 * 24 * req.body.endDate;
   const newAuction = {
-    title: req.body.title,
+    // title: req.body.title,
     description: req.body.description,
     ring: req.body.ring,
     startPrice: req.body.price,
@@ -35,7 +35,8 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
         return res.json({
           id: auction.id,
           viewsCount: auction.viewsCount,
-          title: auction.title,
+          // title: auction.title,
+          title: 'default_title',
           startPrice: auction.startPrice,
           currentPrice: auction.currentPrice,
           currentWinner: auction.currentWinner,
@@ -77,7 +78,7 @@ router.get('/:id', (req, res) => {
           let response = {
             id: auction.id,
             viewsCount: auction.viewsCount,
-            title: auction.title,
+            // title: auction.title,
             startPrice: auction.startPrice,
             currentPrice: auction.currentPrice,
             currentWinner: auction.currentWinner,
@@ -120,7 +121,7 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
   Auction.findById(auctionId).then(auction => {
     if (!auction) {
       return res.status(400).json({
-        bid: 'nie znaleziono aukcji',
+        bid: 'Nie znaleziono aukcji',
         currentPrice: auction.currentPrice,
         currentWinner: auction.currentWinner,
       })
@@ -128,7 +129,7 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
 
     if (auction.owner_id === userId) {
       return res.status(401).json({
-        bid: 'to twoja aukcja',
+        bid: 'To twoja aukcja',
         currentPrice: auction.currentPrice,
         currentWinner: auction.currentWinner,
       })
@@ -138,7 +139,7 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
 
     if (auction.currentPrice >= bid || difference < 10) {
       return res.status(400).json({
-        bid: 'minimalne podbicie: 10zł',
+        bid: 'Minimalne podbicie: 10zł',
         currentPrice: auction.currentPrice,
         currentWinner: auction.currentWinner,
         yourBid: bid,
@@ -150,22 +151,12 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
     auction.save();
 
     return res.json({
-      bid: 'podbiłeś aukcję pomyślnie',
+      bid: 'Podbiłeś aukcję pomyślnie',
       currentPrice: auction.currentPrice,
       currentWinner: auction.currentWinner,
     })
   })
 });
-
-
-
-
-
-
-
-
-
-
 
 router.get('/deactivate/:id', (req, res) => {
   Auction.findById(req.params.id)
@@ -178,8 +169,6 @@ router.get('/deactivate/:id', (req, res) => {
           auction.save();
           return res.json(auction);
         }
-
-
       } else {
         return res.status(400).json({auction: 'Nie znaleziono aukcji'});
       }

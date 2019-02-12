@@ -4,7 +4,7 @@ const isEmpty = require('./is-empty');
 module.exports = function validateAuctionInput(data) {
   let errors = {};
 
-  data.title = !isEmpty(data.title) ? data.title : '';
+  // data.title = !isEmpty(data.title) ? data.title : '';
   data.description = !isEmpty(data.description) ? data.description : '';
   data.ring = !isEmpty(data.ring) ? data.ring : '';
   data.price = !isEmpty(data.price) ? data.price : '';
@@ -12,9 +12,9 @@ module.exports = function validateAuctionInput(data) {
   data.sex = !isEmpty(data.sex) ? data.sex : '';
   data.race = !isEmpty(data.race) ? data.race : '';
 
-  if (Validator.isEmpty(data.title)) {
-    errors.title = 'Tytuł jest wymagany';
-  }
+  // if (Validator.isEmpty(data.title)) {
+  //   errors.title = 'Tytuł jest wymagany';
+  // }
 
   if (Validator.isEmpty(data.description)) {
     errors.description = 'Opisz gołębia';

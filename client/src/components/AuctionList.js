@@ -5,13 +5,15 @@ import {withStyles} from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import {SECONDARY_COLOR} from "../constants";
+
 const styles = theme => ({
   gridItem: {
     padding: '0.3em',
-    margin: '0 5em',
+    margin: '0 auto',
+    maxWidth: '80%',
     [theme.breakpoints.down('sm')]: {
-      margin: 0,
+      maxWidth: '100%',
+      margin: '0.1em 0.3em',
       minWidth: '300px',
       padding: 0,
       paddingBottom: '0.3em'
@@ -22,11 +24,11 @@ const styles = theme => ({
   },
   card: {
     padding: '0.3em',
-    margin: '2em 5em',
-    // maxWidth: '80%',
+    margin: '2em auto',
+    maxWidth: '80%',
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
-      margin: 0,
+      margin: '0.4em 0',
       padding: 0,
     },
     [theme.breakpoints.up('xl')]: {
@@ -43,7 +45,7 @@ const styles = theme => ({
   filterCard: {
     [theme.breakpoints.down('sm')]: {
       // borderBottom: `2px solid ${SECONDARY_COLOR}`,
-      marginBottom: '1em',
+      margin: '0.1em 0.3em'
     }
   }
 });
@@ -68,11 +70,9 @@ class AuctionList extends Component {
 
 
   render() {
-    console.log(this.state);
     const {classes, showFilter} = this.props;
     return (
       <>
-
       <Grid container>
         { showFilter &&
           <Grid item xs={12} className={classes.card} key={"filter"}>
@@ -83,7 +83,7 @@ class AuctionList extends Component {
                     <div style={{flexGrow: '16', paddingRight: '1em'}}>
                       <TextField
                         id={"nameFilter"}
-                        label={"Wyszukaj po nazwie"}
+                        label={"Wyszukaj"}
                         name={"nameFilter"}
                         onChange={this.handleChange('nameFilter')}
                         className={"width-100"}
@@ -135,13 +135,27 @@ class AuctionList extends Component {
           </Grid>
         }
         {this.props.auctions.map(auction => {
+          let ended = false;
+
+          if(!this.props.hideEnded) {
+            if (new Date(auction.endDate) < Date.now()) {
+              ended = true;
+            }
+          } else {
+            if (new Date(auction.endDate) < Date.now()) {
+              return null;
+            }
+          }
+
+
           let component = (
             <Grid item xs={12} className={classes.gridItem} key={auction.title}>
-              <ListCard history={this.props.history} auction={auction}/>
+              <ListCard history={this.props.history} auction={auction} ended={ended} />
             </Grid>
           );
 
-          if (this.state.nameFilter !== '' && !auction.title.toLowerCase().includes(this.state.nameFilter.toLowerCase())) {
+          if ((this.state.nameFilter !== '' && !auction.race.toLowerCase().includes(this.state.nameFilter.toLowerCase()))
+           && (this.state.nameFilter !== '' && !auction.ring.toLowerCase().includes(this.state.nameFilter.toLowerCase()))) {
             component = null;
           }
 
@@ -155,6 +169,7 @@ class AuctionList extends Component {
 
           return component;
         })}
+
       </Grid>
       </>
     );

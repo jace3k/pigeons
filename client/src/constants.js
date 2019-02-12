@@ -36,6 +36,10 @@ export const CLEAR_LIKES = 'CLEAR_LIKES';
 export const CLEAR_BID = 'CLEAR_BID';
 export const CLEAR_AUCTION = 'CLEAR_AUCTION';
 
+export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
+export const UPDATE_FAILED = 'UPDATE_FAILED';
+
+
 export const TITLE = 'Pigeon Aukcjia';
 export const LOGIN_ELEMENT = (<div style={{textAlign: 'center', width: '100%', color: '#AAA'}}>&copy; {TITLE}.</div>);
 

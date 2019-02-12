@@ -8,7 +8,7 @@ import {
 } from "../constants";
 
 const initialState = {
-  current: null,
+  success: false,
 };
 
 export default (state = initialState, action) => {
@@ -29,13 +29,15 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: null,
-        current: action.payload,
+        newAuction: action.payload,
+        success: true
       };
     case CREATE_AUCTION_FAILED:
       return {
         ...state,
         error: action.payload,
-        current: null,
+        newAuction: null,
+        success: false,
       };
     case FETCH_AUCTIONS:
       return {

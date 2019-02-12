@@ -31,7 +31,7 @@ import {TextField} from "@material-ui/core";
 const styles = theme => ({
   container: {
     width: '100%',
-    margin: '2em',
+    // margin: '2em',
     [theme.breakpoints.down('sm')]: {
       marginTop: '0.3em',
     }
@@ -43,7 +43,7 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
       margin: 0,
-      padding: 0,
+      padding: '0.5em',
     }
   },
   topcard: {
@@ -51,7 +51,6 @@ const styles = theme => ({
     margin: '2em auto',
     maxWidth: '80%',
     display: 'flex',
-
     [theme.breakpoints.down('sm')]: {
       maxWidth: '100%',
       margin: 0,
@@ -153,8 +152,6 @@ class Auction extends Component {
         })
       }
     }
-    console.log('props', nextProps);
-    console.log('state', this.state);
     if (nextProps.auctions && nextProps.auctions.bid && this.state.auction) {
       if (nextProps.auctions.bid.currentPrice !== this.state.auction.currentPrice) {
         this.setState({
@@ -268,7 +265,6 @@ class Auction extends Component {
   };
 
   render() {
-    console.log('state-render', this.state);
     const {auction, error, like, dislike, serverError} = this.state;
     const {classes} = this.props;
 
@@ -328,11 +324,8 @@ class Auction extends Component {
                 ]}/>
               </div>
               <div className={classes.description}>
-                <Typography variant={"h3"}>
-                  {auction.title}
-                </Typography>
                 <Tooltip title={"Numer obrączki"} placement={"right"}>
-                  <Typography variant={"h4"}>
+                  <Typography variant={"h3"}>
                     {auction.ring}
                   </Typography>
                 </Tooltip>

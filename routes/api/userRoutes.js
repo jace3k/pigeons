@@ -80,6 +80,38 @@ router.get('/:id/auctions', (req, res) => {
 });
 
 
+router.post('/update', passport.authenticate('jwt', {session: false}), (req, res) => {
+  const {errors, isValid} = validateRegisterInput(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  User.findById(req.user.id).then(user => {
+    if (user) {
+      user.firstName = req.body.firstName;
+      user.lastName = req.body.lastName;
+      user.email = req.body.email;
+
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+          if (err) throw err;
+          user.password = hash;
+        })
+      });
+
+      user.telephone = req.body.telephone;
+      user.address = req.body.address;
+      user.save();
+      return res.json({user: "Zaktualizowano dane"})
+    }
+  })
+});
+
+
+
+
+
+
 router.post('/register', (req, res) => {
   const {errors, isValid} = validateRegisterInput(req.body);
   if (!isValid) {

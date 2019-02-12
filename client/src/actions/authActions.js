@@ -3,7 +3,7 @@ import {
   CLEAR_REGISTER,
   GET_ERRORS,
   REGISTER_SUCCESS,
-  SET_CURRENT_USER
+  SET_CURRENT_USER, UPDATE_FAILED, UPDATE_SUCCESS
 } from "../constants";
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
@@ -25,6 +25,24 @@ export const registerUser = (userData) => dispatch => {
                 payload: err.response.data,
             });
         });
+};
+
+export const updateUser = (userData) => dispatch => {
+  axios
+    .post('/api/users/update', userData)
+    .then(res => {
+      console.log(res.data);
+      dispatch({
+        type: UPDATE_SUCCESS,
+        payload: 'success'
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: UPDATE_FAILED,
+        payload: err.response.data,
+      });
+    });
 };
 
 export const loginUser = userData => dispatch => {

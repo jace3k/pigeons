@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {fetchUserDetails, fetchUserAuctions} from "../actions/userActions";
+import {logoutUser} from "../actions/authActions";
+import {updateUser} from "../actions/authActions";
 import {connect} from "react-redux";
 import Loader from "./Loader";
 import {withStyles} from "@material-ui/core/styles";
@@ -45,6 +47,9 @@ class Profile extends Component {
   };
 
   componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.match.params.name !== nextProps.match.params.name) {
+      this.props.fetchUserDetails(nextProps.match.params.name)
+    }
     if (nextProps.user) {
       this.setState({
         user: nextProps.user,
@@ -67,7 +72,7 @@ class Profile extends Component {
 
     if (this.state.user && this.props.userAuctions) {
       userAuctionsComponent = <AuctionList auctions={userAuctions} showFilter={false} history={this.props.history} />;
-      const {id, name, firstName, lastName, email, address, telephone, date, likes, dislikes} = user;
+      const { name, firstName, lastName, email, address, telephone, date, likes, dislikes} = user;
       component = (
         <div>
           <Card className={classes.card}>
@@ -82,15 +87,32 @@ class Profile extends Component {
             </Typography>
             <Divider/>
             <div>
-              <ul>
-                <li>Nazwa użytkownika: {name},</li>
-                <li>Email: {email},</li>
-                <li>Telefon: {telephone},</li>
-                <li>Adres zamieszkania: {address},</li>
-                <li>Pozytywy: {likes.length},</li>
-                <li>Negatywy: {dislikes.length},</li>
-                <li>Data dołączenia: {date},</li>
-              </ul>
+              {this.props.auth.user.id === user.id
+                ?
+                <ul>EDYTOWALNY BĘDZIE
+                  <li>Nazwa użytkownika: {name},</li>
+                  <li>Email: {email},</li>
+                  <li>Telefon: {telephone},</li>
+                  <li>Adres zamieszkania: {address},</li>
+                  <li>Pozytywy: {likes.length},</li>
+                  <li>Negatywy: {dislikes.length},</li>
+                  <li>Data dołączenia: {date},</li>
+                </ul>
+                :
+                <ul>
+                  <li>Nazwa użytkownika: {name},</li>
+                  <li>Email: {email},</li>
+                  <li>Telefon: {telephone},</li>
+                  <li>Adres zamieszkania: {address},</li>
+                  <li>Pozytywy: {likes.length},</li>
+                  <li>Negatywy: {dislikes.length},</li>
+                  <li>Data dołączenia: {date},</li>
+                </ul>
+
+
+
+              }
+
             </div>
           </Card>
           <Card className={classes.card}>
@@ -126,4 +148,4 @@ const mapStateToProps = state => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, {fetchUserDetails, fetchUserAuctions})(withStyles(styles)(Profile));
+export default connect(mapStateToProps, {fetchUserDetails, fetchUserAuctions, updateUser, logoutUser})(withStyles(styles)(Profile));

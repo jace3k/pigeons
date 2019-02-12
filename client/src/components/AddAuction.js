@@ -69,7 +69,7 @@ const styles = theme => ({
 
 class AddAuction extends Component {
   state = {
-    title: '',
+    // title: '',
     description: '',
     ring: '',
     price: '',
@@ -95,7 +95,7 @@ class AddAuction extends Component {
     e.preventDefault();
 
     const auctionData = {
-      title: this.state.title,
+      // title: this.state.title,
       description: this.state.description,
       ring: this.state.ring,
       price: this.state.price,
@@ -116,15 +116,14 @@ class AddAuction extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.auctions) {
-      if (nextProps.auctions.error) {
-        this.setState({errors: nextProps.auctions.error})
-      } else {
-        this.props.enqueueSnackbar(
-          `Utworzono aukcję ${nextProps.auctions.current.title}`,
-          {variant: 'success'});
-        this.props.history.push(`/auction/${nextProps.auctions.current.id}`)
-      }
+    if (nextProps.auctions.newAuction) {
+      this.props.enqueueSnackbar(
+        `Utworzono aukcję!`,
+        {variant: 'success'});
+      this.props.history.push(`/auction/${nextProps.auctions.newAuction.id}`)
+    }
+    if (nextProps.auctions.error) {
+      this.setState({errors: nextProps.auctions.error})
     }
   }
 
@@ -143,17 +142,17 @@ class AddAuction extends Component {
             </Typography>
           </div>
           <form noValidate autoComplete="off" onSubmit={this.onSubmit}>
-            <TextField
-              id={"title"}
-              label={"Tytuł"}
-              name={"title"}
-              onChange={this.handleChange('title')}
-              variant={"outlined"}
-              value={this.state.title}
-              helperText={errors.title && errors.title}
-              error={errors.title && true}
-              className={classes.textfield}
-            />
+            {/*<TextField*/}
+              {/*id={"title"}*/}
+              {/*label={"Tytuł"}*/}
+              {/*name={"title"}*/}
+              {/*onChange={this.handleChange('title')}*/}
+              {/*variant={"outlined"}*/}
+              {/*value={this.state.title}*/}
+              {/*helperText={errors.title && errors.title}*/}
+              {/*error={errors.title && true}*/}
+              {/*className={classes.textfield}*/}
+            {/*/>*/}
 
             <TextField
               id={"ring"}
