@@ -149,7 +149,7 @@ class AuctionList extends Component {
 
 
           let component = (
-            <Grid item xs={12} className={classes.gridItem} key={auction.title}>
+            <Grid item xs={12} className={classes.gridItem} key={auction.ring + auction.endDate}>
               <ListCard history={this.props.history} auction={auction} ended={ended} />
             </Grid>
           );

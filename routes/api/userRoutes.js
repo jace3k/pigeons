@@ -8,6 +8,7 @@ const passport = require('passport');
 
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const validateUpdateUserInput = require('../../validation/update-user');
 
 router.get('/test',
   (req, res) => res.json({msg: "Users WORKS xDDDs!"}));
@@ -81,30 +82,51 @@ router.get('/:id/auctions', (req, res) => {
 
 
 router.post('/update', passport.authenticate('jwt', {session: false}), (req, res) => {
-  const {errors, isValid} = validateRegisterInput(req.body);
+  const {errors, isValid} = validateUpdateUserInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  User.findOne({where: {email: req.body.email}}).then(user => {
+    if (user && user.email !== req.user.email) {
+      errors.email = 'Adres email jest już zajęty';
+      return res.status(400).json(errors);
+    } else {
+      User.findById(req.user.id).then(user => {
+        if (user) {
+          user.firstName = req.body.firstName;
+          user.lastName = req.body.lastName;
+          user.email = req.body.email;
 
-  User.findById(req.user.id).then(user => {
-    if (user) {
-      user.firstName = req.body.firstName;
-      user.lastName = req.body.lastName;
-      user.email = req.body.email;
+          if (req.body.password && req.body.password !== '') {
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(req.body.password, salt, (err, hash) => {
+                if (err) throw err;
+                user.password = hash;
+              })
+            });
+          }
 
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(req.body.password, salt, (err, hash) => {
-          if (err) throw err;
-          user.password = hash;
-        })
-      });
-
-      user.telephone = req.body.telephone;
-      user.address = req.body.address;
-      user.save();
-      return res.json({user: "Zaktualizowano dane"})
+          user.telephone = req.body.telephone;
+          user.address = req.body.address;
+          user.save();
+          return res.json({
+            id: user.id,
+            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            telephone: user.telephone,
+            address: user.address,
+            date: user.date,
+            likes: user.likes,
+            dislikes: user.dislikes,
+          })
+        }
+      })
     }
-  })
+  });
+
+
 });
 
 
@@ -183,7 +205,7 @@ router.post('/login', (req, res) => {
             const payload = {id: user.id, name: user.name, avatar: user.avatar};
 
             // Sign token
-            jwt.sign(payload, keys.secret, {expiresIn: 3600}, (err, token) => {
+            jwt.sign(payload, keys.secret, {expiresIn: 3600*24}, (err, token) => {
               return res.json({
                 success: true,
                 token: 'Bearer ' + token

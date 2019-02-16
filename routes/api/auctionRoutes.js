@@ -7,6 +7,18 @@ const keys = require('../../config/keys');
 const passport = require('passport');
 const validateAuctionInput = require('../../validation/auction');
 const validateBidInput = require('../../validation/bid');
+const cloudinary = require('cloudinary');
+
+
+router.post('/images', passport.authenticate('jwt', {session: false}), (req, res) => {
+  console.log('files:', req.files);
+  const values = Object.values(req.files);
+  const promises = values.map(image => cloudinary.uploader.upload(image.path));
+  Promise
+    .all(promises)
+    .then(results => res.json(results));
+});
+
 
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const {errors, isValid} = validateAuctionInput(req.body);
@@ -17,6 +29,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
   const endDate = Date.now() + 1000 * 60 * 60 * 24 * req.body.endDate;
   const newAuction = {
     // title: req.body.title,
+    title: 'default_title',
     description: req.body.description,
     ring: req.body.ring,
     startPrice: req.body.price,
@@ -25,7 +38,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     sex: req.body.sex,
     race: req.body.race,
     isActive: endDate - Date.now() > 0,
-    images: [],                            // images implemented in future
+    images: req.body.images.map(img => img.url),
     owner_id: req.user.id,
   };
 
@@ -36,7 +49,6 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
           id: auction.id,
           viewsCount: auction.viewsCount,
           // title: auction.title,
-          title: 'default_title',
           startPrice: auction.startPrice,
           currentPrice: auction.currentPrice,
           currentWinner: auction.currentWinner,
@@ -127,6 +139,14 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
       })
     }
 
+    if (new Date(auction.endDate) < Date.now()) {
+      return res.status(401).json({
+        bid: 'Aukcja zakończona',
+        currentPrice: auction.currentPrice,
+        currentWinner: auction.currentWinner,
+      })
+    }
+
     if (auction.owner_id === userId) {
       return res.status(401).json({
         bid: 'To twoja aukcja',
@@ -134,6 +154,8 @@ router.post('/bid/:id', passport.authenticate('jwt', {session: false}), (req, re
         currentWinner: auction.currentWinner,
       })
     }
+
+
 
     const difference = bid - auction.currentPrice;
 

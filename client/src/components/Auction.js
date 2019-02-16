@@ -3,7 +3,6 @@ import {withStyles} from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 
-import img from '../img/background.jpg';
 import {SECONDARY_COLOR} from "../constants";
 import {connect} from "react-redux";
 import {bidAuction, fetchAuctionDetails, clearBid, clearAuction} from '../actions/auctionActions'
@@ -260,7 +259,6 @@ class Auction extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-
     this.props.bidAuction(this.state.auction.id, this.state.bid)
   };
 
@@ -316,12 +314,15 @@ class Auction extends Component {
           <Card className={classes.card}>
             <div className={classes.flexContainer}>
               <div className={classes.gallery}>
-                <ImageGallery items={[
-                  {
-                    original: img,
-                    thumbnail: img,
+                <ImageGallery items={auction.images.map(url => {
+                  return {
+                    original: url,
+                    thumbnail: url,
                   }
-                ]}/>
+                })}/>
+
+
+
               </div>
               <div className={classes.description}>
                 <Tooltip title={"Numer obrączki"} placement={"right"}>
@@ -381,48 +382,81 @@ class Auction extends Component {
                   }}/>
                 </Typography>
                 <div style={{marginTop: '2em'}}/>
+
                 Cena wywoławcza
                 <Typography variant={"h6"} style={{fontWeight: '600', color: SECONDARY_COLOR}}>
                   {auction.startPrice}{' zł'}
                 </Typography>
                 <div style={{marginTop: '1em'}}/>
 
+                {
+                  new Date(auction.endDate) > Date.now()
+                    ? (
+                      <div>
+                        Cena aktualna
+                        <div>
+                          <Badge badgeContent={auction.currentWinner} color={"primary"}>
+                            <Typography variant={"h4"}
+                                        className={this.state.currentPriceChanged ? classes.currentPriceAnimated : classes.currentPrice}>
+                              {auction.currentPrice}{' zł'}
+                            </Typography>
+                          </Badge>
+                          <div style={{marginTop: '1em'}}/>
+                        </div>
+                        {(this.props.auth.isAuthenticated) &&
+                        <form onSubmit={this.onSubmit}>
+                          <div className={classes.bidarea}>
+                            <TextField
+                              id={"bid"}
+                              label={"Twoja cena"}
+                              name={"bid"}
+                              type={"number"}
+                              onChange={this.handleChange('bid')}
+                              variant={"outlined"}
+                              value={this.state.bid}
+                              helperText={error.bid && error.bid}
+                              error={error.bid && true}
+                              className={classes.textfieldsmall}
+                              InputProps={{
+                                startAdornment: <InputAdornment position="start">PLN</InputAdornment>,
+                              }}
+                            />
 
-                Cena aktualna
-                <div>
-                  <Badge badgeContent={auction.currentWinner} color={"primary"}>
-                    <Typography variant={"h4"}
-                                className={this.state.currentPriceChanged ? classes.currentPriceAnimated : classes.currentPrice}>
-                      {auction.currentPrice}{' zł'}
-                    </Typography>
-                  </Badge>
-                  <div style={{marginTop: '1em'}}/>
-                </div>
-                {(this.props.auth.isAuthenticated) &&
-                <form onSubmit={this.onSubmit}>
-                  <div className={classes.bidarea}>
-                    <TextField
-                      id={"bid"}
-                      label={"Twoja cena"}
-                      name={"bid"}
-                      type={"number"}
-                      onChange={this.handleChange('bid')}
-                      variant={"outlined"}
-                      value={this.state.bid}
-                      helperText={error.bid && error.bid}
-                      error={error.bid && true}
-                      className={classes.textfieldsmall}
-                      InputProps={{
-                        startAdornment: <InputAdornment position="start">PLN</InputAdornment>,
-                      }}
-                    />
+                            <Button type={"submit"} variant={"contained"} color={"secondary"} >
+                              Licytuj
+                            </Button>
+                          </div>
+                        </form>
+                        }
+                      </div>
+                    )
+                    : (
+                      <div>
+                        {auction.currentWinner ? (
+                          <div>
+                            Sprzedano za
+                            <div>
+                              <Badge badgeContent={auction.currentWinner} color={"primary"}>
+                                <Typography variant={"h4"}
+                                            className={this.state.currentPriceChanged ? classes.currentPriceAnimated : classes.currentPrice}>
+                                  {auction.currentPrice}{' zł'}
+                                </Typography>
+                              </Badge>
+                              <div style={{marginTop: '1em'}}/>
+                            </div>
+                          </div>
+                        ) : (
+                          <div>Brak ofert</div>
+                        ) }
 
-                    <Button type={"submit"} variant={"contained"} color={"secondary"} >
-                      Licytuj
-                    </Button>
-                  </div>
-                </form>
+                      </div>
+                    )
                 }
+
+
+
+
+
 
 
               </div>

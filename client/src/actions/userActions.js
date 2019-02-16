@@ -2,7 +2,7 @@ import {
   LIKE_USER, LIKE_USER_FAILED,
   DISLIKE_USER, DISLIKE_USER_FAILED,
   FETCH_USER_DETAILS, FETCH_USER_DETAILS_FAILED,
-  CLEAR_LIKES, FETCH_USER_AUCTIONS, FETCH_USER_AUCTIONS_FAILED,
+  CLEAR_LIKES, FETCH_USER_AUCTIONS, FETCH_USER_AUCTIONS_FAILED, UPDATE_SUCCESS, UPDATE_FAILED, UPDATE_CLEAR,
 } from "../constants";
 
 import axios from 'axios';
@@ -94,4 +94,24 @@ export const fetchUserAuctions = (id) => dispatch => {
         payload: err.response.data,
       })
     })
+};
+
+export const updateUser = (userData) => dispatch => {
+  axios
+    .post('/api/users/update', userData)
+    .then(res => {
+      dispatch({
+        type: UPDATE_SUCCESS,
+        payload: res.data,
+      });
+      dispatch({
+        type: UPDATE_CLEAR,
+      })
+    })
+    .catch(err => {
+      dispatch({
+        type: UPDATE_FAILED,
+        payload: err.response.data,
+      });
+    });
 };

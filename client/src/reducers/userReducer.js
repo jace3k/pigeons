@@ -7,7 +7,7 @@ import {
   FETCH_USER_DETAILS,
   FETCH_USER_DETAILS_FAILED,
   FETCH_USER_AUCTIONS,
-  FETCH_USER_AUCTIONS_FAILED,
+  FETCH_USER_AUCTIONS_FAILED, UPDATE_SUCCESS, UPDATE_FAILED, UPDATE_CLEAR,
 } from "../constants";
 
 const initialState = {
@@ -67,6 +67,22 @@ export default (state = initialState, action) => {
       return {
         error: action.payload,
         userAuctions: null,
+      };
+    case UPDATE_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        updated: true,
+      };
+    case UPDATE_FAILED:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case UPDATE_CLEAR:
+      return {
+        ...state,
+        updated: false,
       };
     default:
       return state;

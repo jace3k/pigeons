@@ -1,5 +1,5 @@
 import {
-  BID_AUCTION, BID_AUCTION_FAILED, CLEAR_AUCTION, CLEAR_BID,
+  AUCTION_PUSH_IMAGE_FAILED, BID_AUCTION, BID_AUCTION_FAILED, CLEAR_AUCTION, CLEAR_BID,
   CREATE_AUCTION,
   CREATE_AUCTION_FAILED,
   FETCH_AUCTION_DETAILS,
@@ -72,6 +72,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         current: null,
+      };
+    case AUCTION_PUSH_IMAGE_FAILED:
+      return {
+        ...state,
+        uploadFailed: true,
       };
     default:
       return state;

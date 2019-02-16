@@ -1,4 +1,4 @@
-import {CLEAR_REGISTER, REGISTER_SUCCESS, SET_CURRENT_USER, UPDATE_FAILED, UPDATE_SUCCESS} from "../constants";
+import {CLEAR_REGISTER, REGISTER_SUCCESS, SET_CURRENT_USER} from "../constants";
 import isEmpty from "../utils/isEmpty";
 
 const initialState = {
@@ -20,18 +20,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         registerSuccess: null,
-      };
-    case UPDATE_SUCCESS:
-      return {
-        ...state,
-        error: null,
-        user: action.payload,
-      };
-    case UPDATE_FAILED:
-      return {
-        ...state,
-        error: action.payload,
-        user: null,
       };
     default:
       return state;

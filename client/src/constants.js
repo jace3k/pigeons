@@ -38,6 +38,9 @@ export const CLEAR_AUCTION = 'CLEAR_AUCTION';
 
 export const UPDATE_SUCCESS = 'UPDATE_SUCCESS';
 export const UPDATE_FAILED = 'UPDATE_FAILED';
+export const UPDATE_CLEAR = 'UPDATE_CLEAR';
+
+export const AUCTION_PUSH_IMAGE_FAILED = 'AUCTION_PUSH_IMAGE_FAILED';
 
 
 export const TITLE = 'Pigeon Aukcjia';

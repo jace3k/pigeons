@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const path = require('path');
 const app = express();
+const cloudinary = require('cloudinary');
+const formData = require('express-form-data');
 require('dotenv').config();
 
 const UserRoutes = require('./routes/api/userRoutes');
@@ -10,10 +12,16 @@ const AuctionRoutes = require('./routes/api/auctionRoutes');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(formData.parse());
 
 app.use(passport.initialize());
 require('./config/passport')(passport);
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET
+});
 
 // ROUTES
 app.use('/api/users', UserRoutes);

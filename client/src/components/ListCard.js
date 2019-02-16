@@ -73,7 +73,7 @@ const styles = theme => ({
 
 class MediaControlCard extends Component {
   render() {
-    const {classes, auction,} = this.props;
+    const {classes, auction} = this.props;
 
     return (
       <Card className={this.props.ended ? classes.ended : classes.card}>
@@ -82,8 +82,8 @@ class MediaControlCard extends Component {
           <div className={classes.imagecontainer}>
             <CardMedia
               className={classes.image}
-              image={img}
-              title="Live from space album cover"
+              image={auction.images[0] ? auction.images[0] : img}
+              title="Img"
             />
           </div>
           <div className={classes.details}>

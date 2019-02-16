@@ -1,5 +1,5 @@
 import {
-  BID_AUCTION,
+  AUCTION_PUSH_IMAGE_FAILED, BID_AUCTION,
   BID_AUCTION_FAILED, CLEAR_AUCTION, CLEAR_BID,
   CREATE_AUCTION,
   CREATE_AUCTION_FAILED,
@@ -29,21 +29,33 @@ export const fetchAuctionDetails = (id) => dispatch => {
       })
     })
 };
-
-export const createAuction = (auctionData) => dispatch => {
+//{headers: {'Content-Type': 'multipart/form-data'}}
+export const createAuction = (auctionData, images) => dispatch => {
   axios
-    .post(`/api/auctions/`, auctionData)
+    .post('/api/auctions/images', images)
     .then(res => {
-      console.log(res.data);
-      dispatch({
-        type: CREATE_AUCTION,
-        payload: res.data
-      })
+      // res.data -> linki do zdjec (array)
+      auctionData.images = res.data;
+      axios
+        .post(`/api/auctions/`, auctionData)
+        .then(res => {
+          dispatch({
+            type: CREATE_AUCTION,
+            payload: res.data
+          })
+        })
+        .catch(err => {
+          console.log(err.response.data);
+          dispatch({
+            type: CREATE_AUCTION_FAILED,
+            payload: err.response.data,
+          })
+        });
     })
     .catch(err => {
       console.log(err.response.data);
       dispatch({
-        type: CREATE_AUCTION_FAILED,
+        type: AUCTION_PUSH_IMAGE_FAILED,
         payload: err.response.data,
       })
     })

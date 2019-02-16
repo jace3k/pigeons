@@ -27,9 +27,11 @@ module.exports = (sequelize, type) => {
         },
         telephone: {
             type: type.STRING,
+            defaultValue: '',
         },
         address: {
             type: type.STRING,
+            defaultValue: '',
         },
         date: {
             type: type.DATE,

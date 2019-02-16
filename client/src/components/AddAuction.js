@@ -77,14 +77,17 @@ class AddAuction extends Component {
     sex: '',
     race: '',
     images: [],
+    images1: [],
+    images2: [],
+    images3: [],
     errors: {},
-
     labelWidth: 0,
+    waiting: false,
   };
 
   handleChange = name => event => {
     this.setState({
-      [name]: event.target.value,
+      [name]: name.startsWith('images') ? event.target.files : event.target.value,
       errors: {
         ...this.state.errors,
         [name]: null
@@ -93,6 +96,16 @@ class AddAuction extends Component {
   };
   onSubmit = e => {
     e.preventDefault();
+    this.setState({waiting: true})
+    const formData = new FormData();
+    const images = [
+      ...this.state.images1,
+      ...this.state.images2,
+      ...this.state.images3
+    ];
+    Array.from(images).forEach((file, i) => {
+      formData.append(i, file);
+    });
 
     const auctionData = {
       // title: this.state.title,
@@ -102,11 +115,9 @@ class AddAuction extends Component {
       endDate: this.state.endDate,
       sex: this.state.sex,
       race: this.state.race,
-      images: this.state.images,
     };
 
-    this.props.createAuction(auctionData)
-    /// post action adding auction
+    this.props.createAuction(auctionData, formData)
   };
 
   componentDidMount() {
@@ -123,7 +134,7 @@ class AddAuction extends Component {
       this.props.history.push(`/auction/${nextProps.auctions.newAuction.id}`)
     }
     if (nextProps.auctions.error) {
-      this.setState({errors: nextProps.auctions.error})
+      this.setState({errors: nextProps.auctions.error, waiting: false})
     }
   }
 
@@ -252,28 +263,62 @@ class AddAuction extends Component {
             </FormControl>
 
             <TextField
-              id={"images"}
-              disabled
-              label={"Zdjęcia"}
-              name={"images"}
-              onChange={this.handleChange('images')}
+              id={"images1"}
+              type={"file"}
+              label={"Zdjęcie"}
+              name={"images1"}
+              onChange={this.handleChange('images1')}
               variant={"outlined"}
-              value={this.state.images}
+              // value={this.state.images}
               helperText={errors.images && errors.images}
               error={errors.images && true}
               className={classes.textfield}
               InputProps={{
-                startAdornment: <InputAdornment position="start">ZDJĘCIA</InputAdornment>,
+                startAdornment: <InputAdornment position="start">ZDJĘCIE</InputAdornment>,
               }}
             />
+
+            <TextField
+              id={"images2"}
+              type={"file"}
+              label={"Zdjęcie"}
+              name={"images2"}
+              onChange={this.handleChange('images2')}
+              variant={"outlined"}
+              // value={this.state.images}
+              helperText={errors.images && errors.images}
+              error={errors.images && true}
+              className={classes.textfield}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">ZDJĘCIE</InputAdornment>,
+              }}
+            />
+
+            <TextField
+              id={"images3"}
+              type={"file"}
+              label={"Zdjęcia"}
+              name={"images3"}
+              onChange={this.handleChange('images3')}
+              variant={"outlined"}
+              // value={this.state.images}
+              helperText={errors.images && errors.images}
+              error={errors.images && true}
+              className={classes.textfield}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">ZDJĘCIE</InputAdornment>,
+              }}
+            />
+
 
             <Button
               type={"submit"}
               variant={"contained"}
               color={"primary"}
               className={"width-100"}
+              disabled={this.state.waiting}
             >
-              {'Dodaj gołębia'}
+              {this.state.waiting ? 'Chwilunia...' : 'Dodaj gołębia'}
             </Button>
           </form>
 
