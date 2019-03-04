@@ -43,7 +43,7 @@ export const UPDATE_CLEAR = 'UPDATE_CLEAR';
 export const AUCTION_PUSH_IMAGE_FAILED = 'AUCTION_PUSH_IMAGE_FAILED';
 
 
-export const TITLE = 'Pigeon Aukcjia';
+export const TITLE = 'Aukcje Gołębi';
 export const LOGIN_ELEMENT = (<div style={{textAlign: 'center', width: '100%', color: '#AAA'}}>&copy; {TITLE}.</div>);
 
 export const PRIMARY_COLOR = primary[600];

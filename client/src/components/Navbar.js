@@ -125,6 +125,7 @@ class Navbar extends Component {
     const isMenuOpen = Boolean(anchorEl);
     const {isAuthenticated, user} = this.props.auth;
     const {classes} = this.props;
+    const isAdmin = user.name === 'Wojtek';
 
     const sideDrawer = (
       <div className={classes.list}>
@@ -224,7 +225,7 @@ class Navbar extends Component {
               >
                 Regulamin
               </ButtonLink>
-              {isAuthenticated &&
+              {(isAuthenticated && isAdmin) &&
               <ButtonLink
                 to={"/add"}
                 active={currentTab === '/add'}

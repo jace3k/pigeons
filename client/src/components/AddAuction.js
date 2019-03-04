@@ -140,12 +140,13 @@ class AddAuction extends Component {
 
   render() {
     const {errors} = this.state;
-    const {isAuthenticated} = this.props.auth;
+    const {isAuthenticated, user} = this.props.auth;
     const {classes} = this.props;
+    const isAdmin = user.name === 'Wojtek';
 
     return (
       <div>
-        {!isAuthenticated && <Redirect to={'/'}/>}
+        {!(isAuthenticated && isAdmin) && <Redirect to={'/'}/>}
         <Card className={classes.card}>
           <div className={classes.cardtitle}>
             <Typography variant={"h4"}>
